@@ -12,6 +12,7 @@ Petit lexique (Pour éviter de tout réécrire tout le temps):
 		- GS = gros soucis qui demande concertation/aide
 		- WIP = work in progress : c'est en cours
 		- C = caca : ça signifie que c'est caca !
+		- Ceci est encore un test
 
 Liste des avancements
 	- Construire le jeu de carte : 				FmàV-M

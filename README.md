@@ -11,8 +11,7 @@ Petit lexique (Pour éviter de tout réécrire tout le temps):
 		- S = soucis mais "facilement" patchable
 		- GS = gros soucis qui demande concertation/aide
 		- WIP = work in progress : c'est en cours
-		- C = caca : ça signifie que c'est caca !
-		- Ceci est encore un test
+		- P = problem : on mettra ce sur un travail qu'on trouve problématique. Mettons que tu trouve que j'ai mal fais faire truc dans un fichier, tu marquera un P à côté de la tâche dont il est question. Le but étant de savoir ce que l'autre fait et lui dire le plus vite possible si problème il y a.
 
 Liste des avancements
 	- Construire le jeu de carte : 				FmàV-M

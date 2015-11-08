@@ -14,7 +14,7 @@ Petit lexique (Pour éviter de tout réécrire tout le temps):
 		- P = problem : on mettra ce sur un travail qu'on trouve problématique. Mettons que tu trouve que j'ai mal fais faire truc dans un fichier, tu marquera un P à côté de la tâche dont il est question. Le but étant de savoir ce que l'autre fait et lui dire le plus vite possible si problème il y a.
 
 Liste des avancements
-	- Construire le jeu de carte : 				FmàV-M
+	- Construire le jeu de carte : 				FmàV-M || Je rencontre des problèmes au niveau du cpp, ce qui me pousserait à penser que l'algo est faut, je pense avoir besoin d'un coup de main.
 	- Brasser le jeu de carte :					WIP-M
 	- Construire la base du programme en c++ :	WIP-M
 	- Demander mise : 							AF-A

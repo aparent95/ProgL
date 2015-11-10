@@ -14,7 +14,7 @@ struct T_compo_paquet
 	bool 	owned	;  
 };
 
-void creation_tas(T_compo_paquet carte[])
+void creation_tas(T_compo_paquet cartes[])
 {
 	int 	count 				=	0 ;
 	string 	tabsorte[4]			=	{"carreaux", "coeur", "pique", "trefle"} ;
@@ -28,12 +28,12 @@ void creation_tas(T_compo_paquet carte[])
 		{
 			for ( int j=0 ; j < 13 ; j++ )
 			{
-				carte[count].sorte			= tabsorte[i] ;
-				carte[count].valeur			= tabvaleur[j] ;
-				carte[count].valeur_num		= tabvaleur_num[j] ;
-				carte[count].nom			= tabnom[j] ;
-				carte[count].garder			= false	;	//quand il choisira quoi garder, s'il n'entre rien, toutes les cartes seront changées
-				carte[count].owned			= false	;	//quand il faudra changer les cartes, ce sera le flag de "est-ce qu'il l'a déjà eu ?"
+				cartes[count].sorte				= tabsorte[i] ;
+				cartes[count].valeur			= tabvaleur[j] ;
+				cartes[count].valeur_num		= tabvaleur_num[j] ;
+				cartes[count].nom				= tabnom[j] ;
+				cartes[count].garder			= false	;	//quand il choisira quoi garder, s'il n'entre rien, toutes les cartes seront changées
+				cartes[count].owned				= false	;	//quand il faudra changer les cartes, ce sera le flag de "est-ce qu'il l'a déjà eu ?"
 				count ++;								//owned = true quand il aura sa main
 			}
 		}
@@ -48,9 +48,9 @@ void creation_tas(T_compo_paquet carte[])
 
 int main ()
 {	
-	T_compo_paquet carte[52] ;
+	T_compo_paquet cartes[52] ;
 
-	creation_tas(carte) ;
+	creation_tas(cartes) ;
 	
 //	for ( int i=0 ; i < 52 ; i++ )			//Vérification du tas de carte
 //	{

@@ -1,5 +1,7 @@
 #include <iostream>
 #include <iomanip>
+#include <cstdlib>
+#include <time.h>
 
 using namespace std;
 
@@ -41,6 +43,36 @@ void creation_tas(T_compo_paquet cartes[])
 }
 
 
+
+void brasser(T_compo_paquet cartes[])
+{
+	srand (time(NULL)) ;				//initialisation de l'aléatoire
+	T_compo_paquet temp ;
+	int tabalea[6] ;
+	
+	for (int i=0 ; i < 100 ; i++)			//Brassage 100
+	{
+		for ( int j=0 ; j < 6 ; j++ )		//Le nombre aléatoire seront changé à chaque boucle
+		{									//les positions seront interverti deux à deux
+			tabalea[j] = rand() %52 ;		//On set un tableau de nombre aléatoire compris entre 0 et 52 exclu	(52 cartes, de 0 à 51)
+		}
+		for ( int j=0 ; j < 6 ; j++ )		//interpositionnage deux par deux des éléments de la structure
+		{
+			temp				=	cartes[tabalea[j]] ;		//faudrait peut être faire une sous fonction pour cette partie ?
+			cartes[tabalea[j]]	=	cartes[tabalea[j+1]] ;
+			cartes[tabalea[j+1]]=	temp ;
+		}
+	}
+}
+
+void display(T_compo_paquet cartes[])		//Cette fonction est à enlever avant que le TP ne soit rendu
+{											//Elle permet d'afficher toutes les cartes dans, donc de vérifier nos fonctions de creation et brassage
+	for ( int i=0 ; i < 52 ; i++ )
+	{
+		cout << cartes[i].nom << "	de	" << cartes[i].sorte /*<<"(poids: " << cartes[i].valeur_num << ") "*/<< endl ;	//en commentaire : poid de la carte
+	}
+}
+
 /*
 !!!!!!!!!!!!! Il faudra penser à changer les noms, en mettre peut être pas des plus simples, mais des plus précis.
 */
@@ -48,15 +80,13 @@ void creation_tas(T_compo_paquet cartes[])
 
 int main ()
 {	
+	
 	T_compo_paquet cartes[52] ;
 
 	creation_tas(cartes) ;
 	
-//	for ( int i=0 ; i < 52 ; i++ )			//Vérification du tas de carte
-//	{
-//		cout << carte[i].nom << " de " << carte[i].sorte << " (" << carte[i].valeur_num << ") " << i+1 << "e carte" << endl ;
-//	}
+	brasser(cartes) ;
 	
-	
-	
+	display(cartes) ;
+
 }

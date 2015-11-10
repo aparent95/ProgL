@@ -15,8 +15,8 @@ Petit lexique (Pour éviter de tout réécrire tout le temps):
 
 Liste des avancements
 	- Construire le jeu de carte : 				DONE
-	- Brasser le jeu de carte :					WIP-M
-	- Construire la base du programme en c++ :	DONE (Etape 1 faite)
+	- Brasser le jeu de carte :					DONE
+	- Construire la base du programme en c++ :	DONE (Etape 1 et 2 faites)
 	- Demander mise : 							AF-A
 	- Évaluer la main / trier main :			AF-A
 	- Saisir ce que veut garder le joueur :		AF-M

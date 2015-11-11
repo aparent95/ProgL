@@ -34,15 +34,13 @@ void creation_tas(T_compo_paquet cartes[])
 				cartes[count].valeur			= tabvaleur[j] ;
 				cartes[count].valeur_num		= tabvaleur_num[j] ;
 				cartes[count].nom				= tabnom[j] ;
-				cartes[count].garder			= false	;	//quand il choisira quoi garder, s'il n'entre rien, toutes les cartes seront changées
+				cartes[count].garder			= true	;	//quand il choisira quoi garder, s'il n'entre rien, toutes les cartes seront changées
 				cartes[count].owned				= false	;	//quand il faudra changer les cartes, ce sera le flag de "est-ce qu'il l'a déjà eu ?"
 				count ++;								//owned = true quand il aura sa main
 			}
 		}
 	}	
 }
-
-
 
 void brasser(T_compo_paquet cartes[])
 {
@@ -65,11 +63,52 @@ void brasser(T_compo_paquet cartes[])
 	}
 }
 
+void donne_main(T_compo_paquet cartes[], T_compo_paquet main[])		//servira aussi à redonner la main
+{
+	int temp ;
+	
+	for ( int i=0 ; i < 5 ; i++ )
+	{
+		temp = i ;
+		while ( (cartes[temp].owned == true) || (cartes[temp].garder == false) )	//verifie s'il a déjà la carte ou si il l'a jeté
+		{
+			temp++ ;
+		}
+		main[i] = cartes[temp] ;
+		main[i].owned = true ;
+		cartes[temp].owned = true ;
+	}
+	
+	for ( int i=0 ; i < 5 ; i++ )
+	{
+		//cout << endl << "valeur : " << main[i].valeur_num << endl;
+		if (main[i].valeur_num > main[i+1].valeur_num)
+		{
+			swap(main[i],main[i+1]) ;
+		}
+	}
+	
+	cout << endl << endl << "Voici votre main : " << endl << endl ;
+	for ( int i=0 ; i < 5 ; i++ )
+	{
+		cout << main[i].nom << "  de  " << main[i].sorte << " (valeur: "<< main[i].valeur_num << ")" <<endl;
+	}
+}
+
+//void swap(T_compo_paquet x, T_compo_paquet y)		//en fait swap(a,b) existe déjà
+//{
+//	T_compo_paquet temp ;
+//	x	=	temp ;
+//	x	=	y ;
+//	y	=	temp ;
+//	
+//}
+
 void display(T_compo_paquet cartes[])		//Cette fonction est à enlever avant que le TP ne soit rendu
 {											//Elle permet d'afficher toutes les cartes dans, donc de vérifier nos fonctions de creation et brassage
 	for ( int i=0 ; i < 52 ; i++ )
 	{
-		cout << cartes[i].nom << "	de	" << cartes[i].sorte /*<<"(poids: " << cartes[i].valeur_num << ") "*/<< endl ;	//en commentaire : poid de la carte
+		cout << cartes[i].nom << "	de	" << cartes[i].sorte <<"(valeur: " << cartes[i].valeur_num << ") "<< endl ;	//en commentaire : poid de la carte
 	}
 }
 
@@ -82,11 +121,12 @@ int main ()
 {	
 	
 	T_compo_paquet cartes[52] ;
+	T_compo_paquet main[5] ;
 
 	creation_tas(cartes) ;
-	
-	brasser(cartes) ;
-	
 	display(cartes) ;
+	donne_main(cartes,main) ;
 
+	
+	
 }

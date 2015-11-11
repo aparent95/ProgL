@@ -65,26 +65,28 @@ void brasser(T_compo_paquet cartes[])
 
 void donne_main(T_compo_paquet cartes[], T_compo_paquet main[])		//servira aussi à redonner la main
 {
-	int temp ;
+	T_compo_paquet temp ;
+	bool modif = true;
 	
 	for ( int i=0 ; i < 5 ; i++ )
 	{
-		temp = i ;
-		while ( (cartes[temp].owned == true) || (cartes[temp].garder == false) )	//verifie s'il a déjà la carte ou si il l'a jeté
-		{
-			temp++ ;
-		}
-		main[i] = cartes[temp] ;
+		main[i] = cartes[i] ;
 		main[i].owned = true ;
-		cartes[temp].owned = true ;
+		cartes[i].owned = true ;
 	}
 	
-	for ( int i=0 ; i < 5 ; i++ )
+	while (modif==true)
 	{
-		//cout << endl << "valeur : " << main[i].valeur_num << endl;
-		if (main[i].valeur_num > main[i+1].valeur_num)
+		modif = false ;
+		for (int i=0 ; i < 5 ; i++)
 		{
-			swap(main[i],main[i+1]) ;
+			if (main[i].valeur_num > main[i+1].valeur_num)
+			{
+				temp = main[i] ;
+				main[i] = main[i+1] ;
+				main[i+1]=temp ;
+				modif = true ;
+			}
 		}
 	}
 	
@@ -94,15 +96,6 @@ void donne_main(T_compo_paquet cartes[], T_compo_paquet main[])		//servira aussi
 		cout << main[i].nom << "  de  " << main[i].sorte << " (valeur: "<< main[i].valeur_num << ")" <<endl;
 	}
 }
-
-//void swap(T_compo_paquet x, T_compo_paquet y)		//en fait swap(a,b) existe déjà
-//{
-//	T_compo_paquet temp ;
-//	x	=	temp ;
-//	x	=	y ;
-//	y	=	temp ;
-//	
-//}
 
 void display(T_compo_paquet cartes[])		//Cette fonction est à enlever avant que le TP ne soit rendu
 {											//Elle permet d'afficher toutes les cartes dans, donc de vérifier nos fonctions de creation et brassage
@@ -122,9 +115,10 @@ int main ()
 	
 	T_compo_paquet cartes[52] ;
 	T_compo_paquet main[5] ;
+	bool flag = true ;
 
 	creation_tas(cartes) ;
-	display(cartes) ;
+	brasser(cartes);
 	donne_main(cartes,main) ;
 
 	

@@ -16,10 +16,17 @@ Petit lexique (Pour éviter de tout réécrire tout le temps):
 Liste des avancements
 	- Construire le jeu de carte : 				DONE
 	- Brasser le jeu de carte :					DONE
-	- Construire la base du programme en c++ :	DONE (Etape 1 et 2 faites)
+	- Construire la base du programme en c++ :	DONE (Etape 1 , 2 , 4 , 6 et 7 faites)
 	- Demander mise : 							AF-A
-	- Évaluer la main / trier main :			AF-A
-	- Saisir ce que veut garder le joueur :		AF-M
-	- Remplacer cartes :						AF-M
+	- Évaluer la main / trier main :			AF-A (Le tri est automatiquement fait dès que la main est donnée)
+	- Saisir ce que veut garder le joueur :		DONE
+	- Remplacer cartes :						DONE
+	- Evaluer la main de nouveau				AF-?
+	- Afficher les gains par carte				AF-?
+	- Faire boulcer le programme				WIP-M
 
-Échéance : Mardi 10 Novembre
+À faire
+	- Modifier l'ordinogramme pour qu'il colle
+	  au programme et aux algo					WIP-M
+
+Échéance : Semaine du 16 au 23

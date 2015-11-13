@@ -16,6 +16,14 @@ struct T_compo_paquet
 	bool 	owned	;  
 };
 
+void display(T_compo_paquet tab[], int c)		//Cette fonction est à enlever avant que le TP ne soit rendu
+{											//Elle permet d'afficher toutes les cartes dans l'ordre, donc de vérifier nos fonctions de creation et brassage
+	for ( int i=0 ; i < c ; i++ )	//Good thing to know : elle affiche aussi bien (cartes,52) que (main,5)
+	{
+		cout << "(" << i+1 << ") " << tab[i].nom << "  de  " << tab[i].sorte << /*" (valeur: "<< main[i].valeur_num << ")" <<*/ endl;
+	}
+}
+
 void creation_tas(T_compo_paquet cartes[])
 {
 	int 	count 				=	0 ;
@@ -34,7 +42,7 @@ void creation_tas(T_compo_paquet cartes[])
 				cartes[count].valeur			= tabvaleur[j] ;
 				cartes[count].valeur_num		= tabvaleur_num[j] ;
 				cartes[count].nom				= tabnom[j] ;
-				cartes[count].garder			= true	;	//quand il choisira quoi garder, s'il n'entre rien, toutes les cartes seront changées
+				cartes[count].garder			= false	;	//quand il choisira quoi garder, s'il n'entre rien, toutes les cartes seront changées
 				cartes[count].owned				= false	;	//quand il faudra changer les cartes, ce sera le flag de "est-ce qu'il l'a déjà eu ?"
 				count ++;									//owned = true quand il aura sa main
 			}
@@ -66,7 +74,7 @@ void brasser(T_compo_paquet cartes[])
 void donne_main(T_compo_paquet cartes[], T_compo_paquet main[])		//servira aussi à redonner la main
 {
 	T_compo_paquet temp ;
-	int c ;
+	int c = 0;
 	bool modif = true;
 	
 	for ( int i=0 ; i < 5 ; i++ )
@@ -109,7 +117,7 @@ void donne_main(T_compo_paquet cartes[], T_compo_paquet main[])		//servira aussi
 void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 {
 	int tabgarde[5]={0};
-	int indice;
+	int indice = 0;
 	int count = 0;		//compteur pour le while
 	char rep;			//confimation de l'échange
 	
@@ -119,44 +127,65 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 	}
 	
 	cout << endl << endl << "Veuillez indiquer le numéro de la carte de votre main que vous voulez garder." << endl ;
-	cout << "Pour terminer, entrez 0" << endl << "Indiquer l'indice : " ; cin >> indice ; cout << endl ;
+	cout << "Pour terminer, entrez 0" << endl << endl << "Indiquer l'indice : " ; cin >> indice ; cout << endl ;
 	
-	while (( indice != 0 )&&( count < 5 ))
+	while (( indice != 0 )&&( count < 4 ))
 	{
 		while (( indice < 0 ) || ( indice > 5 ))		//vérification de la saisie
 		{
-			cout << endl << "Saisie invalide. Veuillez entrer un indice compris entre 1 et 5." << endl ;
+			cout << endl << "Saisie invalide. Veuillez entrer un indice compris entre 1 et 5." << endl;
 			cout << "Indiquer l'indice : " ; cin >> indice ; cout << endl << endl ;
 		}
 		tabgarde[count] = indice ;
 		cout << endl << "Indiquer l'indice : " ; cin >> indice ; cout << endl ;
 		count++;
 	}
+	count = 0;		//En vue d'une réutilisation prochaine
 	
 	for ( int i=0 ; i < 5 ; i++ )		//set tous les garder à faux. Dans le cas où il n'en a gardé aucune, toutes les cartes sont changées
 	{
 		main[i].garder = false ;
 	}
 	
-	for ( int i=0 ; i < 5 ; i++ )		//vérifie quelles cartes il a garder
+	for ( int i=0 ; i < 5 ; i++ )		//vérifie quelles cartes il a gardé
 	{
 		if (tabgarde[i] != 0)
 		{
 			main[tabgarde[i]-1].garder = true ;		//tabgarde[i]-1 c'est parce que le tableau commence toujours à 0
+			count++;		//réutilisation dde la variable pour compter le nombre de carte échangée.
 		}
 	}
 	
-	cout << endl << "Les cartes suivantes vont etre echangees :" << endl ;		//Confirmation
+	system("cls") ;		//Efface la console
 	
-	for ( int i=0 ; i < 5 ; i++ )
+	if (count !=0)
 	{
-		if (main[i].garder == false)
+		cout << endl << "Les cartes suivantes vont etre echangees :" << endl ;		//affichage des cartes ECHANGÉES
+		
+		for ( int i=0 ; i < 5 ; i++ )
 		{
-			cout << main[i].nom << " de " << main[i].sorte << endl ;
+			if (main[i].garder == false)
+			{
+				cout << main[i].nom << " de " << main[i].sorte << endl ;
+			}
+		}
+		
+		cout << endl << "Les cartes suivantes vont etre gardees : " << endl ;	//affichage des cartes GARDÉES
+		
+		for ( int i=0 ; i < 5 ; i++ )
+		{		
+			if (main[i].garder == true)
+			{
+				cout << main[i].nom << " de " << main[i].sorte << endl;
+			}
 		}
 	}
+	else
+	{
+		cout << endl << "Toutes les cartes seront echangees." << endl ;
+	}
 	
-	cout << endl << "Confirmer l'echange ? (o/n) : "; cin >> rep ; cout << endl ;
+	cout << endl << "Confirmer l'echange ? (o/n) : "; cin >> rep ; cout << endl ;	//Confirmation de l'échange
 
 	while ((toupper(rep) != 'O') && (toupper(rep) != 'N'))		//Vérification de la saisie
 	{	
@@ -167,31 +196,58 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 	{
 		case 'O' : donne_main(cartes,main);		//La fonction se termine et change les cartes avec "garde=faux"
 		break;
-		case 'N' : garde_main(cartes,main);		//La fonction se relance, elle réinitialise donc "garder"
+		case 'N' : 	system("cls");
+					cout << endl << endl << "Voici votre main : " << endl << endl ; display(main,5) ;	//affichage avec fonction qui se trouve au début
+					garde_main(cartes,main);		//La fonction se relance, elle réinitialise donc "garder"
 		break;
 	}
 	
 }
 
-void display(T_compo_paquet cartes[])		//Cette fonction est à enlever avant que le TP ne soit rendu
-{											//Elle permet d'afficher toutes les cartes dans l'ordre, donc de vérifier nos fonctions de creation et brassage
-	for ( int i=0 ; i < 52 ; i++ )
+bool rejouer(bool &play)
+{
+	char rep ;
+	cout << endl << endl ;
+	cout << setfill('-') << setw(70) << '-' << setfill(' ') << endl << endl ;
+	cout << "Voulez-vous rejouer ? (o/n) : " ; cin >> rep ; cout << endl ;
+	while ((toupper(rep) != 'O') && (toupper(rep) != 'N'))
 	{
-		cout << cartes[i].nom << "	de	" << cartes[i].sorte <<"(valeur: " << cartes[i].valeur_num << ") "<< endl ;	//en commentaire : poid de la carte
+		cout << endl << "Saisie invalide. \nVoulez-vous rejouer ? (o/n) : " ; cin >> rep ; cout << endl ;
+	}
+	switch (toupper(rep))
+	{
+		case 'O' : play = true; return play ;
+		break;
+		case 'N' : play  = false ; return play ;
+		break;
 	}
 }
 
+
 int main ()
 {	
+	bool playagain;
 	
-	T_compo_paquet cartes[52] ;
-	T_compo_paquet main[5] ;
-
-	creation_tas(cartes) ;
-	brasser(cartes);
-	donne_main(cartes,main) ;
-	garde_main(cartes,main) ;
-
+	do
+	{
+		system("cls") ;
+		
+		T_compo_paquet cartes[52] ;
+		T_compo_paquet main[5] ;
+		playagain = false ;
+		
+		creation_tas(cartes) ;
+	//	brasser(cartes);
+		donne_main(cartes,main) ;
+		garde_main(cartes,main) ;
+		rejouer(playagain) ;
+	}
+	while (playagain) ;
 	
+	system("cls") ;
+	cout << endl << endl << setfill('-') << setw(70) << '-' << setfill(' ') << endl << endl ;
+	cout << "Merci d'avoir jouer !" << endl ;
+	system("Pause") ;
 	
+	return 0;
 }

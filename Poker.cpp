@@ -28,9 +28,9 @@ void creation_tas(T_compo_paquet cartes[])
 {
 	int 	count 				=	0 ;
 	string 	tabsorte[4]			=	{"carreaux", "coeur", "pique", "trefle"} ;
-	string	tabvaleur[13]		=	{"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "D", "R", "A"}	;		//Je me questionne sur l'utilité de ça, vu qu'on a la table des valeurs numériques.
+	string	tabvaleur[13]		=	{"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "D", "R", "A"}	;
 	string 	tabnom[13]			=	{"2", "3", "4", "5", "6", "7", "8", "9", "10", "valet", "dame", "roi", "as"} ;
-	int 	tabvaleur_num[13]	=	{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14} ;								//Ou alors on fait une fonction qui paramètre ca ? TELLEMENT DE POSSIBILITÉ !!
+	int 	tabvaleur_num[13]	=	{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14} ;
 	
 	while ( count < 51 )
 	{
@@ -47,14 +47,16 @@ void creation_tas(T_compo_paquet cartes[])
 				count ++;									//owned = true quand il aura sa main
 			}
 		}
-	}	
+	}
+	
+		
 }
 
 void brasser(T_compo_paquet cartes[])
 {
 	srand (time(NULL)) ;					//initialisation de l'aléatoire
 	T_compo_paquet temp ;
-	int tabalea[6] ;
+	int tabalea[6] = {0} ;
 	
 	for (int i=0 ; i < 100 ; i++)			//Brassage 100
 	{
@@ -64,14 +66,14 @@ void brasser(T_compo_paquet cartes[])
 		}
 		for ( int j=0 ; j < 6 ; j++ )		//interpositionnage deux par deux des éléments de la structure
 		{
-			temp				=	cartes[tabalea[j]] ;		//faudrait peut être faire une sous fonction pour cette partie ?
+			temp				=	cartes[tabalea[j]] ;		
 			cartes[tabalea[j]]	=	cartes[tabalea[j+1]] ;
 			cartes[tabalea[j+1]]=	temp ;
 		}
 	}
 }
 
-void donne_main(T_compo_paquet cartes[], T_compo_paquet main[])		//servira aussi à redonner la main
+void donne_main(T_compo_paquet cartes[], T_compo_paquet main[])		//sert à donner et à redonner la main
 {
 	T_compo_paquet temp ;
 	int c = 0;
@@ -116,15 +118,11 @@ void donne_main(T_compo_paquet cartes[], T_compo_paquet main[])		//servira aussi
 
 void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 {
-	int tabgarde[5]={0};
-	int indice = 0;
+	int tabgarde[5] = {0};
+	int indice;
 	int count = 0;		//compteur pour le while
 	char rep;			//confimation de l'échange
 	
-	for ( int i=0 ; i < 5 ; i++ )		//set tous les "garder" à vrai, en cas de non confirmation de l'échange
-	{
-		main[i].garder = true ;
-	}
 	
 	cout << endl << endl << "Veuillez indiquer le numéro de la carte de votre main que vous voulez garder." << endl ;
 	cout << "Pour terminer, entrez 0" << endl << endl << "Indiquer l'indice : " ; cin >> indice ; cout << endl ;
@@ -142,12 +140,7 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 	}
 	count = 0;		//En vue d'une réutilisation prochaine
 	
-	for ( int i=0 ; i < 5 ; i++ )		//set tous les garder à faux. Dans le cas où il n'en a gardé aucune, toutes les cartes sont changées
-	{
-		main[i].garder = false ;
-	}
-	
-	for ( int i=0 ; i < 5 ; i++ )		//vérifie quelles cartes il a gardé
+	for ( int i=0 ; i < 5 ; i++ )		//vérifie quelles cartes il a gardées
 	{
 		if (tabgarde[i] != 0)
 		{
@@ -155,7 +148,6 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 			count++;		//réutilisation dde la variable pour compter le nombre de carte échangée.
 		}
 	}
-	
 	system("cls") ;		//Efface la console
 	
 	if (count !=0)
@@ -194,17 +186,26 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 	}
 	switch (toupper(rep))		//deux fins de la fonction possibles
 	{
-		case 'O' : donne_main(cartes,main);		//La fonction se termine et change les cartes avec "garde=faux"
+		case 'O' :	donne_main(cartes,main);		//La fonction se termine et change les cartes avec "garde=faux"
+					for ( int i=0 ; i < 5 ; i++ )	
+					{	//set main.garder à faux, pour que main[i] puisse être réutilisable sans probleme
+						main[i].garder = false ;
+					}
 		break;
+		
 		case 'N' : 	system("cls");
 					cout << endl << endl << "Voici votre main : " << endl << endl ; display(main,5) ;	//affichage avec fonction qui se trouve au début
 					garde_main(cartes,main);		//La fonction se relance, elle réinitialise donc "garder"
+					for ( int i=0 ; i < 5 ; i++ )
+					{	//set main.garder à faux, pour que main[i] puisse être réutilisable sans probleme
+						main[i].garder = false ;
+					}
 		break;
 	}
 	
 }
 
-bool rejouer(bool &play)
+bool rejouer(bool &play)		//Affiche/demande au joueur s'il veut rejouer
 {
 	char rep ;
 	cout << endl << endl ;
@@ -218,7 +219,28 @@ bool rejouer(bool &play)
 	{
 		case 'O' : play = true; return play ;
 		break;
-		case 'N' : play  = false ; return play ;
+		case 'N' : play  = false; return play ;
+		break;
+	}
+}
+
+bool demarrer(bool &jouer)		//premiere fonction appellée. Elle affiche le menu de démarrage, et demande au joueur de choisir entre jouer et arrêter le processus
+{
+	int rep ;
+	cout << setfill('=') << setw(25) << ' ' << "Nom de code: Poker Machine " << setw(25) << '=' << setfill(' ') << endl ;
+	cout << endl << endl << endl ;
+	cout << "Que voulez vous faire ?" << endl << "1 - Jouer " << char(133) << " Ndc: Poker Machine." << endl ;
+	cout << "2 - Quitter" << endl << "Entrez votre choix : " ; cin >> rep ;
+	while ((rep != 2) && (rep != 1))
+	{
+		cout << endl << "Saisie invalide. \nEntrez votre choix : " ; cin >> rep ;
+	}
+	
+	switch (rep)
+	{
+		case 1 : jouer = true; return jouer ;
+		break;
+		case 2 : jouer  = false; return jouer ;
 		break;
 	}
 }
@@ -226,27 +248,33 @@ bool rejouer(bool &play)
 
 int main ()
 {	
-	bool playagain;
+	bool playagain = false;
+	bool jouer = false;
 	
-	do
+	demarrer(jouer) ;
+	while ((playagain) || (jouer))
 	{
 		system("cls") ;
 		
 		T_compo_paquet cartes[52] ;
 		T_compo_paquet main[5] ;
 		playagain = false ;
+		jouer = false ;
 		
 		creation_tas(cartes) ;
-	//	brasser(cartes);
+		brasser(cartes);
 		donne_main(cartes,main) ;
 		garde_main(cartes,main) ;
 		rejouer(playagain) ;
 	}
-	while (playagain) ;
 	
 	system("cls") ;
+	cout << "Ce modeste jeu " << char(133) << ' ' << char(130) << 't' << char(130) << " d" << char(130) << "velopp" << char(130) << " par :" << endl;
+	cout << "Aleck Parent" << endl << "Maxime Damour";
 	cout << endl << endl << setfill('-') << setw(70) << '-' << setfill(' ') << endl << endl ;
-	cout << "Merci d'avoir jouer !" << endl ;
+	cout << setw(30) << "Merci d'avoir jou" << char(130) << " !" << endl ;
+	cout << endl << setfill('-') << setw(70) << '-' << setfill(' ') << endl << endl ;
+
 	system("Pause") ;
 	
 	return 0;

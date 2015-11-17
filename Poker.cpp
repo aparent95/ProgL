@@ -76,6 +76,13 @@ void brasser(T_compo_paquet cartes[])
 float demander_mise(float &x)
 {
 	cout << endl << "Veuillez indiquez votre mise : " ; cin >> x ; cout << endl ; // Confirmation à faire ? Utile ?
+	
+	while(x <= 0)
+	{
+		cout << "Saisie invalide." << endl << "Veuillez indiquez votre mise : ";
+		cin >> x ;
+	}
+	
 	return x ;
 }
 
@@ -160,7 +167,7 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 	
 	if (count !=0)
 	{
-		cout << endl << "Les cartes suivantes vont etre echang" << char(130) << "es :" << endl ;		//affichage des cartes ECHANGÉES
+		cout << endl << "Les cartes suivantes seront " << char(130) << "chang" << char(130) << "es :" << endl ;		//affichage des cartes ECHANGÉES
 		
 		for ( int i=0 ; i < 5 ; i++ )
 		{
@@ -182,15 +189,15 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 	}
 	else
 	{
-		cout << endl << "Toutes les cartes seront echang" << char(130) << "es." << endl ;
+		cout << endl << "Toutes les cartes seront " << char(130) << "chang" << char(130) << "es." << endl ;
 	}
 	
-	cout << endl << "Confirmer l'echange ? (o/n) : "; cin >> rep ; cout << endl ;	//Confirmation de l'échange
+	cout << endl << "Confirmer l'" << char(130) << "change ? (o/n) : "; cin >> rep ; cout << endl ;	//Confirmation de l'échange
 
 	while ((toupper(rep) != 'O') && (toupper(rep) != 'N'))		//Vérification de la saisie
 	{	
 		cout << endl << "Saisie invalide." << endl;
-		cout << endl << "Confirmer l'echange ? (o/n) : "; cin >> rep ; cout << endl ;
+		cout << endl << "Confirmer l'" << char(130) << "change ? (o/n) : "; cin >> rep ; cout << endl ;
 	}
 	switch (toupper(rep))		//deux fins de la fonction possibles
 	{
@@ -203,7 +210,7 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 		
 		case 'N' : 	system("cls");
 					cout << endl << endl << "Voici votre main : " << endl << endl ; display(main,5) ;	//affichage avec fonction qui se trouve au début
-					garde_main(cartes,main);		//La fonction se relance, elle réinitialise donc "garder"
+					garde_main(cartes,main);		//La fonction se relance MAIS ELLE DEVRAIT ÊTRE EN DESSOUS DE LA REMISE À 0
 					for ( int i=0 ; i < 5 ; i++ )
 					{	//set main.garder à faux, pour que main[i] puisse être réutilisable sans probleme
 						main[i].garder = false ;

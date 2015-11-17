@@ -16,17 +16,20 @@ Petit lexique (Pour éviter de tout réécrire tout le temps):
 Liste des avancements
 	- Construire le jeu de carte : 				DONE
 	- Brasser le jeu de carte :					DONE
-	- Construire la base du programme en c++ :	DONE (Etape 1 , 2 , 4 , 6 et 7 faites)
-	- Demander mise : 							AF-A
+	- Construire la base du programme en c++ :	DONE (Etape 1 , 2 , 4 , 6 , 7 et 9 faites)
+	- Demander mise : 							DONE
 	- Évaluer la main / trier main :			AF-A (Le tri est automatiquement fait dès que la main est donnée)
 	- Saisir ce que veut garder le joueur :		DONE
 	- Remplacer cartes :						DONE
-	- Evaluer la main de nouveau				AF-?
-	- Afficher les gains par carte				AF-?
-	- Faire boulcer le programme				WIP-M
+	- Evaluer la main de nouveau				AF-? (La fonction sera déjà faite)
+	- Afficher les gains par carte				AF-? 
+	- Faire boulcer le programme				DONE
+
+NOTE :	La consigne dit qu'au moment d'évaluer la main, il faut qu'elle tri par ordre de gain. Ce que je propose, c'est de trier par ordre de gain quand le gain sera affiché.
+		En attendant, la main est triée quand elle est donnée et les cartes sont triées par odre de POIDS. Mais on pourrait les ranger par sorte.
 
 À faire
 	- Modifier l'ordinogramme pour qu'il colle
-	  au programme et aux algo					WIP-M
+	  au programme et aux algo					DONE
 
 Échéance : Semaine du 16 au 23

@@ -73,11 +73,19 @@ void brasser(T_compo_paquet cartes[])
 	}
 }
 
+float demander_mise(float &x)
+{
+	cout << endl << "Veuillez indiquez votre mise : " ; cin >> x ; cout << endl ; // Confirmation à faire ? Utile ?
+	return x ;
+}
+
 void donne_main(T_compo_paquet cartes[], T_compo_paquet main[])		//sert à donner et à redonner la main
 {
 	T_compo_paquet temp ;
 	int c = 0;
 	bool modif = true;
+	
+	system("cls");		// possiblement, il y a autre part où il faudrait l'enlever.
 	
 	for ( int i=0 ; i < 5 ; i++ )
 	{
@@ -124,7 +132,7 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 	char rep;			//confimation de l'échange
 	
 	
-	cout << endl << endl << "Veuillez indiquer le numéro de la carte de votre main que vous voulez garder." << endl ;
+	cout << endl << endl << "Veuillez indiquer le num" << char(130) << "ro de la carte de votre main que vous voulez garder." << endl ;
 	cout << "Pour terminer, entrez 0" << endl << endl << "Indiquer l'indice : " ; cin >> indice ; cout << endl ;
 	
 	while (( indice != 0 )&&( count < 4 ))
@@ -132,10 +140,10 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 		while (( indice < 0 ) || ( indice > 5 ))		//vérification de la saisie
 		{
 			cout << endl << "Saisie invalide. Veuillez entrer un indice compris entre 1 et 5." << endl;
-			cout << "Indiquer l'indice : " ; cin >> indice ; cout << endl << endl ;
+			cout << "Indiquez l'indice : " ; cin >> indice ; cout << endl << endl ;
 		}
 		tabgarde[count] = indice ;
-		cout << endl << "Indiquer l'indice : " ; cin >> indice ; cout << endl ;
+		cout << endl << "Indiquez l'indice : " ; cin >> indice ; cout << endl ;
 		count++;
 	}
 	count = 0;		//En vue d'une réutilisation prochaine
@@ -152,7 +160,7 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 	
 	if (count !=0)
 	{
-		cout << endl << "Les cartes suivantes vont etre echangees :" << endl ;		//affichage des cartes ECHANGÉES
+		cout << endl << "Les cartes suivantes vont etre echang" << char(130) << "es :" << endl ;		//affichage des cartes ECHANGÉES
 		
 		for ( int i=0 ; i < 5 ; i++ )
 		{
@@ -162,7 +170,7 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 			}
 		}
 		
-		cout << endl << "Les cartes suivantes vont etre gardees : " << endl ;	//affichage des cartes GARDÉES
+		cout << endl << "Les cartes suivantes seront gard" << char(130) << "es : " << endl ;	//affichage des cartes GARDÉES
 		
 		for ( int i=0 ; i < 5 ; i++ )
 		{		
@@ -174,7 +182,7 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 	}
 	else
 	{
-		cout << endl << "Toutes les cartes seront echangees." << endl ;
+		cout << endl << "Toutes les cartes seront echang" << char(130) << "es." << endl ;
 	}
 	
 	cout << endl << "Confirmer l'echange ? (o/n) : "; cin >> rep ; cout << endl ;	//Confirmation de l'échange
@@ -250,6 +258,7 @@ int main ()
 {	
 	bool playagain = false;
 	bool jouer = false;
+	float mise = 0 ;
 	
 	demarrer(jouer) ;
 	while ((playagain) || (jouer))
@@ -263,6 +272,7 @@ int main ()
 		
 		creation_tas(cartes) ;
 		brasser(cartes);
+		demander_mise(mise);
 		donne_main(cartes,main) ;
 		garde_main(cartes,main) ;
 		rejouer(playagain) ;

@@ -132,27 +132,32 @@ void donne_main(T_compo_paquet cartes[], T_compo_paquet main[])		//sert à donner
 }
 
 void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
-{
+{	
 	int tabgarde[5] = {0};
 	int indice;
 	int count = 0;		//compteur pour le while
 	char rep;			//confimation de l'échange
 	
+	for (int i=0 ; i < 5 ; i++)
+	{
+		main[i].garder = false;
+	}
 	
 	cout << endl << endl << "Veuillez indiquer le num" << char(130) << "ro de la carte de votre main que vous voulez garder." << endl ;
-	cout << "Pour terminer, entrez 0" << endl << endl << "Indiquer l'indice : " ; cin >> indice ; cout << endl ;
+	cout << "Pour terminer, entrez 0" << endl << endl ;
 	
-	while (( indice != 0 )&&( count < 4 ))
+	do
 	{
+		cout << endl << "Indiquez l'indice : " ; cin >> indice ; cout << endl ;
 		while (( indice < 0 ) || ( indice > 5 ))		//vérification de la saisie
 		{
 			cout << endl << "Saisie invalide. Veuillez entrer un indice compris entre 1 et 5." << endl;
 			cout << "Indiquez l'indice : " ; cin >> indice ; cout << endl << endl ;
 		}
 		tabgarde[count] = indice ;
-		cout << endl << "Indiquez l'indice : " ; cin >> indice ; cout << endl ;
 		count++;
 	}
+	while (( indice != 0 )&&( count < 5 ));
 	count = 0;		//En vue d'une réutilisation prochaine
 	
 	for ( int i=0 ; i < 5 ; i++ )		//vérifie quelles cartes il a gardées
@@ -192,6 +197,7 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 		cout << endl << "Toutes les cartes seront " << char(130) << "chang" << char(130) << "es." << endl ;
 	}
 	
+	
 	cout << endl << "Confirmer l'" << char(130) << "change ? (o/n) : "; cin >> rep ; cout << endl ;	//Confirmation de l'échange
 
 	while ((toupper(rep) != 'O') && (toupper(rep) != 'N'))		//Vérification de la saisie
@@ -211,14 +217,165 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 		case 'N' : 	system("cls");
 					cout << endl << endl << "Voici votre main : " << endl << endl ; display(main,5) ;	//affichage avec fonction qui se trouve au début
 					garde_main(cartes,main);		//La fonction se relance MAIS ELLE DEVRAIT ÊTRE EN DESSOUS DE LA REMISE À 0
-					for ( int i=0 ; i < 5 ; i++ )
-					{	//set main.garder à faux, pour que main[i] puisse être réutilisable sans probleme
-						main[i].garder = false ;
-					}
+//					for ( int i=0 ; i < 5 ; i++ )
+//					{	//set main.garder à faux, pour que main[i] puisse être réutilisable sans probleme
+//						main[i].garder = false ;
+//					}
 		break;
 	}
 	
 }
+
+void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
+{
+	bool flag = true;
+	int combinaison = 0 ;
+	int compteur = 0 ;
+	int c = 0 ;
+		
+	for ( int i=0 ; i < 4 ; i ++ )		// Vérification des sortes
+	{
+		if (main[i].sorte != main[i+1].sorte)
+		{
+			flag = false ;
+		}
+	}
+
+	if (flag)		// SI toutes les cartes sont de la même sorte
+	{
+		for (int i=0 ; i < 4 ; i++ )
+		{
+			if (main[i].valeur_num != main[i+1].valeur_num - 1)
+			{
+				flag = false ;
+			}
+		}
+		if (!flag)
+		{
+			combinaison = 5;		// 5 cartes de la même sorte
+		}
+		else
+		{
+			if (main[0].valeur_num == 10)
+			{
+				combinaison = 1 ;		// Suite royale (premiere carte = 10)
+				
+			}
+			else
+			{
+				combinaison = 2 ;		// Suite
+			}
+		}	
+	}
+	
+	else			// SINON (si pas toutes des la mêmes sortes)
+	{
+		flag = true ;
+		for ( int i=0 ; i < 4 ; i++ )
+		{
+			if (main[i].valeur_num != main[i+1].valeur_num - 1)
+			{
+				flag = false ;
+			}
+		}
+		if (flag)
+		{
+			combinaison = 4 ;		// Suite de 5 cartes (pas de la même sorte)
+		}
+		flag = true ;
+		if (main[0].valeur_num != main[1].valeur_num)		// Si la premiere carte differente de la 2nd (test des 4 cartes pareilles)
+		{
+			for ( int i=1 ; i < 4 ; i++ )		// Vérification si les cartes restantes sont identiques entre elles
+			{
+				if (main[i].valeur_num != main[i+1].valeur_num)	// les cartes identiques sont à la fin
+				{
+					flag = false ;
+				}
+			}
+			if (flag)
+			{
+				combinaison = 3 ;	// 4 cartes pareilles
+			}
+		}
+		else		// Test dans le cas ou les 4 cartes identiques sont au début
+		{
+			flag = true ;
+			for ( int i=0 ; i < 3 ; i++ )	// vérifie les 4 premieres cartes si elles sont IDENTIQUE
+			{
+				if (main[i].valeur_num != main[i+1].valeur_num)
+				{
+					flag = false ;	
+				}
+			}
+			if ( (flag) && (main[3].valeur_num != main[4].valeur_num) )	// Si la dernière cartes est differente de l'avant derniere
+			{
+				combinaison = 3 ;
+			}
+		}
+		compteur = 0 ;
+		for (int i=0 ; i < 4 ; i++)		//Vérification de la 6e possibilié : FullHouse
+		{
+			if (main[i].valeur_num = main[i+1].valeur_num)	// Compteur ne peut valoir que 2 ou 3, puisque la paire ne peut être qu'au début et à la fin.
+			{
+				compteur++ ;
+				if (compteur == 3)
+				{
+					flag = true ;
+				}
+			}
+			else
+			{
+				compteur = 1 ;	
+			}
+		}
+		if (flag)	// Si 3 cartes sont identiques d'AFFILÉ un fois dans la main
+		{
+			combinaison = 7 ;	// Il y a au mois 3 cartes IDENTIQUES
+			if ( (main[1].valeur_num != main[2].valeur_num) && (compteur == 2) )
+			{
+				combinaison = 6 ;		// Il y a FullHouse
+			}
+		}
+		for (int i=0 ; i < 4 ; i++)
+		{
+			if ( (main[i].valeur_num == main[i+1].valeur_num) && (i < 2) )		// si il y a une paire avant que le nombre de cartes permette d'avoir une autre paire
+			{
+				for ( int j=i+2 ; j < 4 ; j++ )		// vérification si, dans le reste des cartes, ya une autre paire
+				{
+					if (main[j].valeur_num == main[j+1].valeur_num)
+					{
+						combinaison = 8 ;
+					}
+				}
+			}
+		}
+		
+	}
+	cout << endl << "combi : " << combinaison << endl ;
+	// Mise à jour du gain
+	switch (combinaison)
+	{
+		case 1 : gain = mise * 40;
+		break;
+		case 2 : gain = mise * 30;
+		break;
+		case 3 : gain = mise * 25;
+		break;
+		case 4 : gain = mise * 20;
+		break;
+		case 5 : gain = mise * 15;
+		break;
+		case 6 : gain = mise * 10;
+		break;
+		case 7 : gain = mise * 5;
+		break;
+		case 8 : gain = mise * 3;
+		break;
+		default : cout << endl << "Vous ne gagnez rien !" << endl;
+	}
+	
+}
+
 
 bool rejouer(bool &play)		//Affiche/demande au joueur s'il veut rejouer
 {
@@ -266,6 +423,7 @@ int main ()
 	bool playagain = false;
 	bool jouer = false;
 	float mise = 0 ;
+	float gain = 0 ;
 	
 	demarrer(jouer) ;
 	while ((playagain) || (jouer))
@@ -281,7 +439,10 @@ int main ()
 		brasser(cartes);
 		demander_mise(mise);
 		donne_main(cartes,main) ;
+		evaluer_main(main,gain,mise);
 		garde_main(cartes,main) ;
+		evaluer_main(main,gain,mise);
+		cout << endl << "gain : " << gain << endl ;
 		rejouer(playagain) ;
 	}
 	
@@ -295,4 +456,7 @@ int main ()
 	system("Pause") ;
 	
 	return 0;
+	
+	
+
 }

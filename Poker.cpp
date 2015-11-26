@@ -312,16 +312,17 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 				combinaison = 3 ;
 			}
 		}
-		compteur = 0 ;
+		compteur = 1 ;
 		for (int i=0 ; i < 4 ; i++)		//Vérification de la 6e possibilié : FullHouse
 		{
-			if (main[i].valeur_num = main[i+1].valeur_num)	// Compteur ne peut valoir que 2 ou 3, puisque la paire ne peut être qu'au début et à la fin.
+			if (main[i].valeur_num == main[i+1].valeur_num)	// Compteur ne peut valoir que 2 ou 3, puisque la paire ne peut être qu'au début et à la fin.
 			{
 				compteur++ ;
 				if (compteur == 3)
 				{
 					flag = true ;
 				}
+				
 			}
 			else
 			{
@@ -331,9 +332,16 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 		if (flag)	// Si 3 cartes sont identiques d'AFFILÉ un fois dans la main
 		{
 			combinaison = 7 ;	// Il y a au mois 3 cartes IDENTIQUES
-			if ( (main[1].valeur_num != main[2].valeur_num) && (compteur == 2) )
+			if (compteur == 2)
 			{
-				combinaison = 6 ;		// Il y a FullHouse
+				combinaison = 6 ;		// Il y a FullHouse, 3 cartes identiques au début, 2 cartes identiques à la fin
+			}
+			else
+			{
+				if (main[3].valeur_num == main[4].valeur_num)
+				{
+					combinaison = 6;	//deux cartes identiques au début, 3 cartes identiques à la fin
+				}
 			}
 		}
 		for (int i=0 ; i < 4 ; i++)

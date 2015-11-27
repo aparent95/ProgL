@@ -562,7 +562,7 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 	
 	else
 	{
-		for ( int i=0 ; i < 4 ; i ++ )		// Vérification des sortes
+		for ( int i=0 ; i < 4 ; i++ )		// Vérification des sortes
 		{
 			if (main[i].sorte != main[i+1].sorte)
 			{

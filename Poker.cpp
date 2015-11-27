@@ -37,7 +37,7 @@ void choisir_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 		cout << "Veuillez entrer l'indice : ";
 		cin >> rep ;
 		cout << endl << endl ;
-		while( (rep < 0) || (rep > 52) )
+		while( (rep < 0) || (rep > 53) )
 		{
 			cout << endl << "Cette carte n'existe pas. Tricher, oui; mais trichez bien !" << endl ;
 			cout << "Veuillez entrer l'indice : ";
@@ -62,9 +62,9 @@ void creation_tas(T_compo_paquet cartes[])
 {
 	int 	count 				=	0 ;
 	string 	tabsorte[4]			=	{"carreaux", "coeur", "pique", "trefle"} ;
-	string	tabvaleur[13]		=	{"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "D", "R", "A"}	;
-	string 	tabnom[13]			=	{"2", "3", "4", "5", "6", "7", "8", "9", "10", "valet", "dame", "roi", "as"} ;
-	int 	tabvaleur_num[13]	=	{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14} ;
+	string	tabvaleur[15]		=	{"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "D", "R", "A", "BJK", "RJK"}	;
+	string 	tabnom[15]			=	{"2", "3", "4", "5", "6", "7", "8", "9", "10", "valet", "dame", "roi", "as", "Joker noir", "Joker rouge"} ;
+	int 	tabvaleur_num[14]	=	{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15} ;
 	
 	while ( count < 52 )
 	{
@@ -82,7 +82,17 @@ void creation_tas(T_compo_paquet cartes[])
 			}
 		}
 	}
-	
+
+	cartes[52].valeur 		= tabvaleur[13] ;
+	cartes[52].nom 			= tabnom[13] ;
+	cartes[52].valeur_num	= tabvaleur_num[13] ;
+	cartes[52].garder		= false ;
+	cartes[52].owned 		= false ;
+	cartes[53].valeur 		= tabvaleur[14] ;
+	cartes[53].nom 			= tabnom[14] ;
+	cartes[53].valeur_num	= tabvaleur_num[13] ;
+	cartes[53].garder 		= false ;
+	cartes[53].owned 		= false ;
 		
 }
 
@@ -96,7 +106,7 @@ void brasser(T_compo_paquet cartes[])
 	{
 		for ( int j=0 ; j < 6 ; j++ )		//Le nombre aléatoire seront changé à chaque boucle
 		{									//les positions seront interverti deux à deux
-			tabalea[j] = rand() %52 ;		//On set un tableau de nombre aléatoire compris entre 0 et 52 exclu	(52 cartes, de 0 à 51)
+			tabalea[j] = rand() %54 ;		//On set un tableau de nombre aléatoire compris entre 0 et 52 exclu	(52 cartes, de 0 à 51)
 		}
 		for ( int j=0 ; j < 6 ; j++ )		//interpositionnage deux par deux des éléments de la structure
 		{
@@ -161,7 +171,14 @@ void donne_main(T_compo_paquet cartes[], T_compo_paquet main[])		//sert à donner
 	cout << endl << endl << "Voici votre main : " << endl << endl ;
 	for ( int i=0 ; i < 5 ; i++ )
 	{
-		cout << "(" << i+1 << ") " << main[i].nom << "  de  " << main[i].sorte << /*" (valeur: "<< main[i].valeur_num << ")" <<*/ endl;
+		if (main[i].valeur_num == 15)
+		{
+			cout << "(" << i+1 << ") " << main[i].nom << endl;
+		}
+		else
+		{
+			cout << "(" << i+1 << ") " << main[i].nom << "  de  " << main[i].sorte << /*" (valeur: "<< main[i].valeur_num << ")" <<*/ endl;	
+		}
 	}
 }
 
@@ -267,133 +284,412 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 	int combinaison = 0 ;
 	int compteur = 0 ;
 	int c = 0 ;
-		
-	for ( int i=0 ; i < 4 ; i ++ )		// Vérification des sortes
-	{
-		if (main[i].sorte != main[i+1].sorte)
-		{
-			flag = false ;
-		}
-	}
 
-	if (flag)		// SI toutes les cartes sont de la même sorte
+	if ( main[4].valeur_num == 15 )
 	{
-		for (int i=0 ; i < 4 ; i++ )
+		for ( int i=0 ; i < 3 ; i ++ )		// Vérification des sortes
 		{
-			if (main[i].valeur_num != main[i+1].valeur_num - 1)
+			if (main[i].sorte != main[i+1].sorte)
 			{
 				flag = false ;
 			}
 		}
-		if (!flag)
+
+		if (flag)		// SI toutes les cartes sont de la même sorte
 		{
-			combinaison = 5;		// 5 cartes de la même sorte
-		}
-		else
-		{
-			if (main[0].valeur_num == 10)
+			main[4].sorte = main[3].sorte ; 					//Donne au joker la même sorte que les 4 premières cartes
+			main[4].valeur_num = main[3].valeur_num + 1 ;		//Donne au joker la valeur de la dernière carte + 1 au cas où il serait situation de Suite royale ou de Suite
+
+			for (int i=0 ; i < 4 ; i++ )
 			{
-				combinaison = 1 ;		// Suite royale (premiere carte = 10)
-				
+				if (main[i].valeur_num != main[i+1].valeur_num - 1)
+				{
+					flag = false ;
+				}
+			}
+			if (!flag)
+			{
+				combinaison = 5;		// 5 cartes de la même sorte
 			}
 			else
 			{
-				combinaison = 2 ;		// Suite
-			}
-		}	
-	}
-	
-	else			// SINON (si pas toutes des la mêmes sortes)
-	{
-		flag = true ;
-		for ( int i=0 ; i < 4 ; i++ )
-		{
-			if (main[i].valeur_num != main[i+1].valeur_num - 1)
-			{
-				flag = false ;
-			}
+				if (main[0].valeur_num == 10)
+				{
+					//main[4].valeur_num = 14 ;
+					combinaison = 1 ;		// Suite royale (premiere carte = 10)
+					
+				}
+				else
+				{
+					combinaison = 2 ;		// Suite
+				}
+			}	
 		}
-		if (flag)
+		
+		else			// SINON (si pas toutes de la même sorte)
 		{
-			combinaison = 4 ;		// Suite de 5 cartes (pas de la même sorte)
-		}
-		flag = true ;
-		if (main[0].valeur_num != main[1].valeur_num)		// Si la premiere carte differente de la 2nd (test des 4 cartes pareilles)
-		{
-			for ( int i=1 ; i < 4 ; i++ )		// Vérification si les cartes restantes sont identiques entre elles
+			flag = true ;
+			for ( int i=0 ; i < 3 ; i++ )
 			{
-				if (main[i].valeur_num != main[i+1].valeur_num)	// les cartes identiques sont à la fin
+				if (main[i].valeur_num != main[i+1].valeur_num - 1)
 				{
 					flag = false ;
 				}
 			}
 			if (flag)
 			{
-				combinaison = 3 ;	// 4 cartes pareilles
+				main[4].valeur_num = main[3].valeur_num + 1 ;	//Le joker vient suivre la dernière carte
+				combinaison = 4 ;								// Suite de 5 cartes (pas de la même sorte)
 			}
-		}
-		else		// Test dans le cas ou les 4 cartes identiques sont au début
-		{
 			flag = true ;
-			for ( int i=0 ; i < 3 ; i++ )	// vérifie les 4 premieres cartes si elles sont IDENTIQUE
+			if (main[0].valeur_num != main[1].valeur_num)		// Si la premiere carte differente de la 2nd (test des 4 cartes pareilles)
 			{
-				if (main[i].valeur_num != main[i+1].valeur_num)
+				for ( int i=1 ; i < 3 ; i++ )		// Vérification si les 3 (sans le joker) cartes de la fin sont identiques entre elles
 				{
-					flag = false ;	
-				}
-			}
-			if ( (flag) && (main[3].valeur_num != main[4].valeur_num) )	// Si la dernière cartes est differente de l'avant derniere
-			{
-				combinaison = 3 ;
-			}
-		}
-		compteur = 1 ;
-		for (int i=0 ; i < 4 ; i++)		//Vérification de la 6e possibilié : FullHouse
-		{
-			if (main[i].valeur_num == main[i+1].valeur_num)	// Compteur ne peut valoir que 2 ou 3, puisque la paire ne peut être qu'au début et à la fin.
-			{
-				compteur++ ;
-				if (compteur == 3)
-				{
-					flag = true ;
-				}
-				
-			}
-			else
-			{
-				compteur = 1 ;	
-			}
-		}
-		if (flag)	// Si 3 cartes sont identiques d'AFFILÉ un fois dans la main
-		{
-			combinaison = 7 ;	// Il y a au mois 3 cartes IDENTIQUES
-			if (compteur == 2)
-			{
-				combinaison = 6 ;		// Il y a FullHouse, 3 cartes identiques au début, 2 cartes identiques à la fin
-			}
-			else
-			{
-				if (main[3].valeur_num == main[4].valeur_num)
-				{
-					combinaison = 6;	//deux cartes identiques au début, 3 cartes identiques à la fin
-				}
-			}
-		}
-		for (int i=0 ; i < 4 ; i++)
-		{
-			if ( (main[i].valeur_num == main[i+1].valeur_num) && (i < 2) )		// si il y a une paire avant que le nombre de cartes permette d'avoir une autre paire
-			{
-				for ( int j=i+2 ; j < 4 ; j++ )		// vérification si, dans le reste des cartes, ya une autre paire
-				{
-					if (main[j].valeur_num == main[j+1].valeur_num)
+					if (main[i].valeur_num != main[i+1].valeur_num)	// les cartes identiques sont à la fin
 					{
-						combinaison = 8 ;
+						flag = false ;
+					}
+				}
+				if (flag)
+				{
+					main[4].valeur_num = main[3].valeur_num ;	//Le joker vient égaler la dernière carte
+					combinaison = 3 ;	// 4 cartes pareilles
+				}
+			}
+		
+			else		// Test dans le cas ou les 3 (sans le joker) cartes identiques sont au début
+			{
+				flag = true ;
+				for ( int i=0 ; i < 2 ; i++ )	// vérifie les 3 premieres cartes si elles sont IDENTIQUE
+				{
+					if (main[i].valeur_num != main[i+1].valeur_num)
+					{
+						flag = false ;	
+					}
+				}
+				if ( (flag) && (main[2].valeur_num != main[3].valeur_num) )	// Si la dernière cartes est differente de l'avant derniere (sans le joker)
+				{
+					main[4].valeur_num = main[2].valeur_num ;	//Le joker vient égaler la dernière carte
+					combinaison = 3 ;
+				}
+			}
+			compteur = 1 ;
+			for (int i=0 ; i < 4 ; i++)		//Vérification de la 6e possibilié : FullHouse
+			{
+				if (main[i].valeur_num == main[i+1].valeur_num)	// Compteur ne peut valoir que 2 ou 3, puisque la paire ne peut être qu'au début ou à la fin.
+				{
+					compteur++ ;
+					if (compteur == 3)
+					{
+						flag = true ;
+					}
+					
+				}
+				else
+				{
+					compteur = 1 ;	
+				}
+			}
+			if (flag)	// Si 3 cartes sont identiques d'AFFILÉ une fois dans la main
+			{
+				combinaison = 7 ;	// Il y a au mois 3 cartes IDENTIQUES
+				if (compteur == 2)
+				{
+					combinaison = 6 ;		// Il y a FullHouse, 3 cartes identiques au début, 2 cartes identiques à la fin
+				}
+				else
+				{
+					if (main[3].valeur_num == main[4].valeur_num)
+					{
+						combinaison = 6;	//deux cartes identiques au début, 3 cartes identiques à la fin
+					}
+				}
+			}
+			for (int i=0 ; i < 4 ; i++)
+			{
+				if ( (main[i].valeur_num == main[i+1].valeur_num) && (i < 2) )		// si il y a une paire avant que le nombre de cartes permette d'avoir une autre paire
+				{
+					for ( int j=i+2 ; j < 4 ; j++ )		// vérification si, dans le reste des cartes, il y a une autre paire
+					{
+						if (main[j].valeur_num == main[j+1].valeur_num)
+						{
+							combinaison = 8 ;
+						}
 					}
 				}
 			}
 		}
-		
 	}
+
+	else if (main[3].valeur_num == 15)
+		{
+			for ( int i=0 ; i < 2 ; i ++ )		// Vérification des sortes
+			{
+				if (main[i].sorte != main[i+1].sorte)
+				{
+					flag = false ;
+				}
+			}
+
+			if (flag)		// SI toutes les cartes sont de la même sorte
+			{
+				main[3].sorte = main[2].sorte ; 					//Donne au joker1 la même sorte que les 3 premières cartes
+				main[3].valeur_num = main[2].valeur_num + 1 ;		//Donne au joker1 la valeur de la dernière carte + 1 au cas où il serait situation de Suite royale ou de Suite
+				main[4].sorte = main[3].sorte ;						//Donne au joker2 la même sorte que les 4 première cartes
+				main[4].valeur_num = main[3].valeur_num + 1 ;		//Donne au Joker2 la valeur du Joker1 + 1 au cas où il serait situation de Suite royale ou de Suite
+
+				for (int i=0 ; i < 4 ; i++ )
+				{
+					if (main[i].valeur_num != main[i+1].valeur_num - 1)
+					{
+						flag = false ;
+					}
+				}
+				if (!flag)
+				{
+					combinaison = 5;		// 5 cartes de la même sorte
+				}
+				else
+				{
+					if (main[0].valeur_num == 10)
+					{
+						//main[4].valeur_num = 14 ;
+						combinaison = 1 ;		// Suite royale (premiere carte = 10)
+						
+					}
+					else
+					{
+						combinaison = 2 ;		// Suite
+					}
+				}	
+			}
+			
+			else			// SINON (si pas toutes des la mêmes sortes)
+			{
+				flag = true ;
+				for ( int i=0 ; i < 2 ; i++ )
+				{
+					if (main[i].valeur_num != main[i+1].valeur_num - 1)
+					{
+						flag = false ;
+					}
+				}
+				if (flag)
+				{
+					main[3].valeur_num = main[2].valeur_num + 1 ;	//Le joker1 vient suivre la dernière carte
+					main[4].valeur_num = main[3].valeur_num + 1 ;	//Le joker2 vient suivre le joker1
+					combinaison = 4 ;								// Suite de 5 cartes (pas de la même sorte)
+				}
+				flag = true ;
+				if (main[0].valeur_num != main[1].valeur_num)		// Si la premiere carte differente de la 2nd (test des 4 cartes pareilles)
+				{
+					int i=1 ;											// Vérification si les 2 (sans les jokers) cartes de la fin sont identiques entre elles
+					if (main[i].valeur_num != main[i+1].valeur_num)	// les cartes identiques sont à la fin
+						{
+							flag = false ;
+						}
+					if (flag)
+					{
+						main[3].valeur_num = main[2].valeur_num ;	//Le joker1 vient égaler la dernière carte
+						main[4].valeur_num = main[3].valeur_num ;	//Le joker2 vient égaler le joker1
+						combinaison = 3 ;	// 4 cartes pareilles
+					}
+				}
+				else		// Test dans le cas ou les 2 (sans les jokers) cartes identiques sont au début
+				{
+					flag = true ;
+					int i=0 ;
+					if (main[i].valeur_num != main[i+1].valeur_num) 	// vérifie les 2 premieres cartes si elles sont IDENTIQUES
+					{
+						flag = false ;	
+					}
+
+					if ( (flag) && (main[1].valeur_num != main[2].valeur_num) )	// Si la dernière cartes est differente de l'avant derniere (sans les jokers)
+					{
+						main[3].valeur_num = main[1].valeur_num ;	//Le joker1 vient égaler la dernière carte
+						main[4].valeur_num = main[2].valeur_num ;	//Le joker2 vient égaler le joker1
+						combinaison = 3 ;
+					}
+				}
+				compteur = 1 ;
+				for (int i=0 ; i < 4 ; i++)		//Vérification de la 6e possibilié : FullHouse
+				{
+					if (main[i].valeur_num == main[i+1].valeur_num)	// Compteur ne peut valoir que 2 ou 3, puisque la paire ne peut être qu'au début ou à la fin.
+					{
+						compteur++ ;
+						if (compteur == 3)
+						{
+							flag = true ;
+						}
+						
+					}
+					else
+					{
+						compteur = 1 ;	
+					}
+				}
+				if (flag)	// Si 3 cartes sont identiques d'AFFILÉ une fois dans la main
+				{
+					combinaison = 7 ;	// Il y a au mois 3 cartes IDENTIQUES
+					if (compteur == 2)
+					{
+						combinaison = 6 ;		// Il y a FullHouse, 3 cartes identiques au début, 2 cartes identiques à la fin
+					}
+					else
+					{
+						if (main[3].valeur_num == main[4].valeur_num)
+						{
+							combinaison = 6;	//deux cartes identiques au début, 3 cartes identiques à la fin
+						}
+					}
+				}
+				for (int i=0 ; i < 4 ; i++)
+				{
+					if ( (main[i].valeur_num == main[i+1].valeur_num) && (i < 2) )		// si il y a une paire avant que le nombre de cartes permette d'avoir une autre paire
+					{
+						for ( int j=i+2 ; j < 4 ; j++ )		// vérification si, dans le reste des cartes, il y a une autre paire
+						{
+							if (main[j].valeur_num == main[j+1].valeur_num)
+							{
+								combinaison = 8 ;
+							}
+						}
+					}
+				}
+			}
+		}
+	
+	else
+	{
+		for ( int i=0 ; i < 4 ; i ++ )		// Vérification des sortes
+		{
+			if (main[i].sorte != main[i+1].sorte)
+			{
+				flag = false ;
+			}
+		}
+
+		if (flag)		// SI toutes les cartes sont de la même sorte
+		{
+			for (int i=0 ; i < 4 ; i++ )
+			{
+				if (main[i].valeur_num != main[i+1].valeur_num - 1)
+				{
+					flag = false ;
+				}
+			}
+			if (!flag)
+			{
+				combinaison = 5;		// 5 cartes de la même sorte
+			}
+			else
+			{
+				if (main[0].valeur_num == 10)
+				{
+					combinaison = 1 ;		// Suite royale (premiere carte = 10)
+					
+				}
+				else
+				{
+					combinaison = 2 ;		// Suite
+				}
+			}
+		}
+		
+		else			// SINON (si pas toutes des la mêmes sortes)
+		{
+			flag = true ;
+			for ( int i=0 ; i < 4 ; i++ )
+			{
+				if (main[i].valeur_num != main[i+1].valeur_num - 1)
+				{
+					flag = false ;
+				}
+			}
+			if (flag)
+			{
+				combinaison = 4 ;		// Suite de 5 cartes (pas de la même sorte)
+			}
+			flag = true ;
+			if (main[0].valeur_num != main[1].valeur_num)		// Si la premiere carte differente de la 2nd (test des 4 cartes pareilles)
+			{
+				for ( int i=1 ; i < 4 ; i++ )		// Vérification si les cartes restantes sont identiques entre elles
+				{
+					if (main[i].valeur_num != main[i+1].valeur_num)	// les cartes identiques sont à la fin
+					{
+						flag = false ;
+					}
+				}
+				if (flag)
+				{
+					combinaison = 3 ;	// 4 cartes pareilles
+				}
+			}
+			else		// Test dans le cas ou les 4 cartes identiques sont au début
+			{
+				flag = true ;
+				for ( int i=0 ; i < 3 ; i++ )	// vérifie les 4 premieres cartes si elles sont IDENTIQUE
+				{
+					if (main[i].valeur_num != main[i+1].valeur_num)
+					{
+						flag = false ;	
+					}
+				}
+				if ( (flag) && (main[3].valeur_num != main[4].valeur_num) )	// Si la dernière cartes est differente de l'avant derniere
+				{
+					combinaison = 3 ;
+				}
+			}
+			compteur = 1 ;
+			for (int i=0 ; i < 4 ; i++)		//Vérification de la 6e possibilié : FullHouse
+			{
+				if (main[i].valeur_num == main[i+1].valeur_num)	// Compteur ne peut valoir que 2 ou 3, puisque la paire ne peut être qu'au début et à la fin.
+				{
+					compteur++ ;
+					if (compteur == 3)
+					{
+						flag = true ;
+					}
+					
+				}
+				else
+				{
+					compteur = 1 ;	
+				}
+			}
+			if (flag)	// Si 3 cartes sont identiques d'AFFILÉ un fois dans la main
+			{
+				combinaison = 7 ;	// Il y a au mois 3 cartes IDENTIQUES
+				if (compteur == 2)
+				{
+					combinaison = 6 ;		// Il y a FullHouse, 3 cartes identiques au début, 2 cartes identiques à la fin
+				}
+				else
+				{
+					if (main[3].valeur_num == main[4].valeur_num)
+					{
+						combinaison = 6;	//deux cartes identiques au début, 3 cartes identiques à la fin
+					}
+				}
+			}
+			for (int i=0 ; i < 4 ; i++)
+			{
+				if ( (main[i].valeur_num == main[i+1].valeur_num) && (i < 2) )		// si il y a une paire avant que le nombre de cartes permette d'avoir une autre paire
+				{
+					for ( int j=i+2 ; j < 4 ; j++ )		// vérification si, dans le reste des cartes, ya une autre paire
+					{
+						if (main[j].valeur_num == main[j+1].valeur_num)
+						{
+							combinaison = 8 ;
+						}
+					}
+				}
+			}
+			
+		}
+	}
+		
 	cout << endl << "combi : " << combinaison << endl ;
 	// Mise à jour du gain
 	switch (combinaison)
@@ -478,7 +774,7 @@ int main ()
 	{
 		system("cls") ;
 		
-		T_compo_paquet cartes[52] ;
+		T_compo_paquet cartes[54] ;
 		T_compo_paquet main[5] ;
 		playagain = false ;
 		jouer = false ;
@@ -489,13 +785,15 @@ int main ()
 		if (triche)
 		{
 			choisir_main(cartes,main);
+			brasser(cartes);
+
 		}
 		else
 		{
+			brasser(cartes);
 			donne_main(cartes,main) ;
 		}
 		
-		brasser(cartes);
 		evaluer_main(main,gain,mise);
 		garde_main(cartes,main) ;
 		evaluer_main(main,gain,mise);

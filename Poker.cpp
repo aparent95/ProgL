@@ -24,6 +24,40 @@ void display(T_compo_paquet tab[], int c)		//Cette fonction est à enlever avant 
 	}
 }
 
+void choisir_main(T_compo_paquet cartes[] , T_compo_paquet main[])
+{
+	system("cls");
+	int tabrep[5];
+	int rep = 0 ;
+	int count = 0 ;
+	cout << endl << "Felicitation ! Vous trichez !" << endl << "Pour l'indice des cartes, merci de vous referer au document Cartes.pdf" << endl << endl ;
+	cout << "Vous pouvez alors choisir les cartes qui seront dans votre main." << endl ;
+	while (count < 5)
+	{
+		cout << "Veuillez entrer l'indice : ";
+		cin >> rep ;
+		cout << endl << endl ;
+		while( (rep < 0) || (rep > 52) )
+		{
+			cout << endl << "Cette carte n'existe pas. Tricher, oui; mais trichez bien !" << endl ;
+			cout << "Veuillez entrer l'indice : ";
+			cin >> rep ;
+			cout << endl << endl ;
+		}
+		tabrep[count] = rep ;
+		count++;
+	}
+	
+	for (int i=0 ; i < 5 ; i++)
+	{
+		main[i] = cartes[tabrep[i]];
+	}
+	
+	cout << endl << endl << "Voici votre main : " << endl << endl ;
+	display(main,5);
+	
+}
+
 void creation_tas(T_compo_paquet cartes[])
 {
 	int 	count 				=	0 ;
@@ -32,7 +66,7 @@ void creation_tas(T_compo_paquet cartes[])
 	string 	tabnom[13]			=	{"2", "3", "4", "5", "6", "7", "8", "9", "10", "valet", "dame", "roi", "as"} ;
 	int 	tabvaleur_num[13]	=	{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14} ;
 	
-	while ( count < 51 )
+	while ( count < 52 )
 	{
 		for ( int i=0 ; i < 4 ; i++ )
 		{
@@ -158,6 +192,7 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 		count++;
 	}
 	while (( indice != 0 )&&( count < 5 ));
+	
 	count = 0;		//En vue d'une réutilisation prochaine
 	
 	for ( int i=0 ; i < 5 ; i++ )		//vérifie quelles cartes il a gardées
@@ -384,7 +419,6 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 	
 }
 
-
 bool rejouer(bool &play)		//Affiche/demande au joueur s'il veut rejouer
 {
 	char rep ;
@@ -404,13 +438,16 @@ bool rejouer(bool &play)		//Affiche/demande au joueur s'il veut rejouer
 	}
 }
 
-bool demarrer(bool &jouer)		//premiere fonction appellée. Elle affiche le menu de démarrage, et demande au joueur de choisir entre jouer et arrêter le processus
+void demarrer(bool &jouer, bool &triche)		//premiere fonction appellée. Elle affiche le menu de démarrage, et demande au joueur de choisir entre jouer et arrêter le processus
 {
 	int rep ;
 	cout << setfill('=') << setw(25) << ' ' << "Nom de code: Poker Machine " << setw(25) << '=' << setfill(' ') << endl ;
 	cout << endl << endl << endl ;
-	cout << "Que voulez vous faire ?" << endl << "1 - Jouer " << char(133) << " Ndc: Poker Machine." << endl ;
-	cout << "2 - Quitter" << endl << "Entrez votre choix : " ; cin >> rep ;
+	cout << "Que voulez vous faire ?" << endl ;
+	cout << "1 - Jouer " << char(133) << " Ndc: Poker Machine." << endl ;
+	cout << "2 - Tricher" << endl ;
+	cout << "3 - Quitter" << endl ;
+	cout << "Entrez votre choix : " ; cin >> rep ;
 	while ((rep != 2) && (rep != 1))
 	{
 		cout << endl << "Saisie invalide. \nEntrez votre choix : " ; cin >> rep ;
@@ -418,9 +455,11 @@ bool demarrer(bool &jouer)		//premiere fonction appellée. Elle affiche le menu d
 	
 	switch (rep)
 	{
-		case 1 : jouer = true; return jouer ;
+		case 1 : jouer = true;
 		break;
-		case 2 : jouer  = false; return jouer ;
+		case 2 : jouer  = true; triche = true ;
+		break;
+		case 3 : jouer  = false;
 		break;
 	}
 }
@@ -430,10 +469,11 @@ int main ()
 {	
 	bool playagain = false;
 	bool jouer = false;
+	bool triche = false;
 	float mise = 0 ;
 	float gain = 0 ;
 	
-	demarrer(jouer) ;
+	demarrer(jouer, triche) ;
 	while ((playagain) || (jouer))
 	{
 		system("cls") ;
@@ -444,9 +484,18 @@ int main ()
 		jouer = false ;
 		
 		creation_tas(cartes) ;
-		brasser(cartes);
 		demander_mise(mise);
-		donne_main(cartes,main) ;
+		
+		if (triche)
+		{
+			choisir_main(cartes,main);
+		}
+		else
+		{
+			donne_main(cartes,main) ;
+		}
+		
+		brasser(cartes);
 		evaluer_main(main,gain,mise);
 		garde_main(cartes,main) ;
 		evaluer_main(main,gain,mise);

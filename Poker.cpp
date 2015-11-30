@@ -8,10 +8,10 @@ using namespace std;
 
 struct T_compo_paquet
 {
+	string 	nom ;
 	string 	sorte ;
 	string 	valeur ;		//string parce que 10 n'est pas un caractère
-	int 	valeur_num ; 	//valeur numérique des cartes : 2 pour un 2, 14 pour un as
-	string 	nom ;
+	int 	valeur_num ; 	//valeur numérique des cartes : 2 pour un 2, 14 pour un as, 15 pour les Jokers
 	bool 	garder ;
 	bool 	owned	;  
 };
@@ -20,11 +20,18 @@ void display(T_compo_paquet tab[], int c)		//Cette fonction est à enlever avant 
 {											//Elle permet d'afficher toutes les cartes dans l'ordre, donc de vérifier nos fonctions de creation et brassage
 	for ( int i=0 ; i < c ; i++ )	//Good thing to know : elle affiche aussi bien (cartes,52) que (main,5)
 	{
-		cout << "(" << i+1 << ") " << tab[i].nom << "  de  " << tab[i].sorte << /*" (valeur: "<< main[i].valeur_num << ")" <<*/ endl;
+		if ((tab[i].valeur == "JN") || (tab[i].valeur == "JR"))
+		{
+			cout << "(" << i+1 << ") " << tab[i].nom << endl ;
+		}
+		else
+		{
+			cout << "(" << i+1 << ") " << tab[i].nom << "  de  " << tab[i].sorte << /*" (valeur: "<< main[i].valeur_num << ")" <<*/ endl;
+		}
 	}
 }
 
-void choisir_main(T_compo_paquet cartes[] , T_compo_paquet main[])
+void choisir_main(T_compo_paquet cartes[] , T_compo_paquet main[], int &nb_joker)
 {
 	system("cls");
 	int tabrep[5];
@@ -37,7 +44,7 @@ void choisir_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 		cout << "Veuillez entrer l'indice : ";
 		cin >> rep ;
 		cout << endl << endl ;
-		while( (rep < 0) || (rep > 52) )
+		while( (rep < 0) || (rep > 53) )
 		{
 			cout << endl << "Cette carte n'existe pas. Tricher, oui; mais trichez bien !" << endl ;
 			cout << "Veuillez entrer l'indice : ";
@@ -52,6 +59,16 @@ void choisir_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 	{
 		main[i] = cartes[tabrep[i]];
 	}
+
+	system("cls");
+	
+	for (int i=0 ; i < 5 ; i++)	//vérifie le nombre de joker dans la main et change j
+	{
+		if (main[i].valeur_num == 15)
+		{
+			nb_joker++;
+		}
+	}
 	
 	cout << endl << endl << "Voici votre main : " << endl << endl ;
 	display(main,5);
@@ -62,9 +79,9 @@ void creation_tas(T_compo_paquet cartes[])
 {
 	int 	count 				=	0 ;
 	string 	tabsorte[4]			=	{"carreaux", "coeur", "pique", "trefle"} ;
-	string	tabvaleur[13]		=	{"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "D", "R", "A"}	;
-	string 	tabnom[13]			=	{"2", "3", "4", "5", "6", "7", "8", "9", "10", "valet", "dame", "roi", "as"} ;
-	int 	tabvaleur_num[13]	=	{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14} ;
+	string	tabvaleur[15]		=	{"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "D", "R", "A", "JR" , "JN"}	;
+	string 	tabnom[15]			=	{"2", "3", "4", "5", "6", "7", "8", "9", "10", "valet", "dame", "roi", "as" , "Joker rouge" , "Joker noir"} ;
+	int 	tabvaleur_num[15]	=	{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 15} ;
 	
 	while ( count < 52 )
 	{
@@ -72,17 +89,26 @@ void creation_tas(T_compo_paquet cartes[])
 		{
 			for ( int j=0 ; j < 13 ; j++ )
 			{
-				cartes[count].sorte				= tabsorte[i] ;
-				cartes[count].valeur			= tabvaleur[j] ;
-				cartes[count].valeur_num		= tabvaleur_num[j] ;
-				cartes[count].nom				= tabnom[j] ;
-				cartes[count].garder			= false	;	//quand il choisira quoi garder, s'il n'entre rien, toutes les cartes seront changées
-				cartes[count].owned				= false	;	//quand il faudra changer les cartes, ce sera le flag de "est-ce qu'il l'a déjà eu ?"
+				cartes[count].sorte			= tabsorte[i] ;
+				cartes[count].valeur		= tabvaleur[j] ;
+				cartes[count].valeur_num	= tabvaleur_num[j] ;
+				cartes[count].nom			= tabnom[j] ;
+				cartes[count].garder		= false	;	//quand il choisira quoi garder, s'il n'entre rien, toutes les cartes seront changées
+				cartes[count].owned			= false	;	//quand il faudra changer les cartes, ce sera le flag de "est-ce qu'il l'a déjà eu ?"
 				count ++;									//owned = true quand il aura sa main
 			}
 		}
 	}
 	
+	for ( int i=0 ; i < 2 ; i++ )
+	{
+		cartes[count].nom			= tabnom[i+13] ;
+		cartes[count].valeur		= tabvaleur[i+13] ;
+		cartes[count].valeur_num	= tabvaleur_num[i+13] ;
+		cartes[count].garder		= false	;
+		cartes[count].owned			= false	;
+		count++ ;
+	}	
 		
 }
 
@@ -96,7 +122,7 @@ void brasser(T_compo_paquet cartes[])
 	{
 		for ( int j=0 ; j < 6 ; j++ )		//Le nombre aléatoire seront changé à chaque boucle
 		{									//les positions seront interverti deux à deux
-			tabalea[j] = rand() %52 ;		//On set un tableau de nombre aléatoire compris entre 0 et 52 exclu	(52 cartes, de 0 à 51)
+			tabalea[j] = rand() %52 ;		//On set un tableau de nombre aléatoire compris entre 0 et 54 exclu	(54 cartes, de 0 à 53)
 		}
 		for ( int j=0 ; j < 6 ; j++ )		//interpositionnage deux par deux des éléments de la structure
 		{
@@ -120,13 +146,21 @@ float demander_mise(float &x)
 	return x ;
 }
 
-void donne_main(T_compo_paquet cartes[], T_compo_paquet main[])		//sert à donner et à redonner la main
+void donne_main(T_compo_paquet cartes[], T_compo_paquet main[], int &nb_joker)		//sert à donner et à redonner la main et détermine le nombre de joker
 {
 	T_compo_paquet temp ;
 	int c = 0;
 	bool modif = true;
 	
 	system("cls");		// possiblement, il y a autre part où il faudrait l'enlever.
+	
+	if (main[0].nom == "")		// Vérifie si la main est vide (si c'est la premiere fois que la fonction est appelée)
+	{
+		for (int i=0 ; i < 5 ; i++)
+		{
+			main[i].garder = false ;
+		}
+	}
 	
 	for ( int i=0 ; i < 5 ; i++ )
 	{
@@ -137,16 +171,16 @@ void donne_main(T_compo_paquet cartes[], T_compo_paquet main[])		//sert à donner
 			{
 				c++;
 			}
-		main[i] = cartes[c] ;
-		main[i].owned = true ;
-		cartes[c].owned = true ;
+			main[i] = cartes[c] ;
+			main[i].owned = true ;
+			cartes[c].owned = true ;
 		}
 	}
 	
 	while (modif==true)
 	{
 		modif = false ;
-		for (int i=0 ; i < 5 ; i++)
+		for (int i=0 ; i < 4 ; i++)
 		{
 			if (main[i].valeur_num > main[i+1].valeur_num)
 			{
@@ -158,19 +192,25 @@ void donne_main(T_compo_paquet cartes[], T_compo_paquet main[])		//sert à donner
 		}
 	}
 	
-	cout << endl << endl << "Voici votre main : " << endl << endl ;
-	for ( int i=0 ; i < 5 ; i++ )
+	for (int i=0 ; i < 5 ; i++)	//vérifie le nombre de joker dans la main et change j
 	{
-		cout << "(" << i+1 << ") " << main[i].nom << "  de  " << main[i].sorte << /*" (valeur: "<< main[i].valeur_num << ")" <<*/ endl;
+		if (main[i].valeur_num == 15)
+		{
+			nb_joker++;
+		}
 	}
+	
+	cout << endl << endl << "Voici votre main : " << endl << endl ;
+	display(main,5);
 }
 
 void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 {	
 	int tabgarde[5] = {0};
-	int indice;
+	int indice ;
 	int count = 0;		//compteur pour le while
-	char rep;			//confimation de l'échange
+	char rep;			//confirmation de l'échange
+	int nb_joker ;
 	
 	for (int i=0 ; i < 5 ; i++)
 	{
@@ -242,7 +282,7 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 	}
 	switch (toupper(rep))		//deux fins de la fonction possibles
 	{
-		case 'O' :	donne_main(cartes,main);		//La fonction se termine et change les cartes avec "garde=faux"
+		case 'O' :	donne_main(cartes,main,nb_joker);		//La fonction se termine et change les cartes avec "garde=faux"
 					for ( int i=0 ; i < 5 ; i++ )	
 					{	//set main.garder à faux, pour que main[i] puisse être réutilisable sans probleme
 						main[i].garder = false ;
@@ -263,11 +303,29 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 
 void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 {
+	T_compo_paquet temp ;
 	bool flag = true;
 	int combinaison = 0 ;
 	int compteur = 0 ;
 	int c = 0 ;
-		
+	
+	while(flag)
+	{
+		flag = false;
+		for (int i=0 ; i < 4 ; i++)
+		{
+			if (main[i].valeur_num > main[i+1].valeur_num)
+			{
+				temp = main[i];
+				main[i] = main[i+1];
+				main[i+1] = temp;
+				flag = true ;
+			}
+		}
+	}
+	
+	flag = true;
+	
 	for ( int i=0 ; i < 4 ; i ++ )		// Vérification des sortes
 	{
 		if (main[i].sorte != main[i+1].sorte)
@@ -306,7 +364,7 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 	else			// SINON (si pas toutes des la mêmes sortes)
 	{
 		flag = true ;
-		for ( int i=0 ; i < 4 ; i++ )
+		for ( int i=0 ; i < 4 ; i++ )	//Vérifie si les cartes se suivent
 		{
 			if (main[i].valeur_num != main[i+1].valeur_num - 1)
 			{
@@ -335,22 +393,22 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 		else		// Test dans le cas ou les 4 cartes identiques sont au début
 		{
 			flag = true ;
-			for ( int i=0 ; i < 3 ; i++ )	// vérifie les 4 premieres cartes si elles sont IDENTIQUE
+			for ( int i=0 ; i < 3 ; i++ )	// vérifie les 4 premieres cartes si elles sont IDENTIQUES
 			{
 				if (main[i].valeur_num != main[i+1].valeur_num)
 				{
 					flag = false ;	
 				}
 			}
-			if ( (flag) && (main[3].valeur_num != main[4].valeur_num) )	// Si la dernière cartes est differente de l'avant derniere
+			if  (flag) /*&& (main[3].valeur_num != main[4].valeur_num) )*/	// Si la dernière cartes est differente de l'avant derniere
 			{
-				combinaison = 3 ;
+				combinaison = 3 ; //4 cartes identiques
 			}
 		}
 		compteur = 1 ;
 		for (int i=0 ; i < 4 ; i++)		//Vérification de la 6e possibilié : FullHouse
 		{
-			if (main[i].valeur_num == main[i+1].valeur_num)	// Compteur ne peut valoir que 2 ou 3, puisque la paire ne peut être qu'au début et à la fin.
+			if ( (main[i].valeur_num == main[i+1].valeur_num) )	// Compteur ne peut valoir que 2 ou 3, puisque la paire ne peut être qu'au début et à la fin.
 			{
 				compteur++ ;
 				if (compteur == 3)
@@ -364,16 +422,16 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 				compteur = 1 ;	
 			}
 		}
-		if (flag)	// Si 3 cartes sont identiques d'AFFILÉ un fois dans la main
+		if ((flag) && (combinaison == 0))	// Si 3 cartes sont identiques d'AFFILÉ un fois dans la main
 		{
 			combinaison = 7 ;	// Il y a au mois 3 cartes IDENTIQUES
-			if (compteur == 2)
+			if ( (compteur == 2) && (combinaison == 7) )	// combinaison = 7 pour éviter des problemes de gain plus faibles qu'ils ne devraient être
 			{
 				combinaison = 6 ;		// Il y a FullHouse, 3 cartes identiques au début, 2 cartes identiques à la fin
 			}
 			else
 			{
-				if (main[3].valeur_num == main[4].valeur_num)
+				if ( (main[0].valeur_num == main[1].valeur_num) && (combinaison == 7) && (compteur == 3) )
 				{
 					combinaison = 6;	//deux cartes identiques au début, 3 cartes identiques à la fin
 				}
@@ -381,7 +439,7 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 		}
 		for (int i=0 ; i < 4 ; i++)
 		{
-			if ( (main[i].valeur_num == main[i+1].valeur_num) && (i < 2) )		// si il y a une paire avant que le nombre de cartes permette d'avoir une autre paire
+			if ( (main[i].valeur_num == main[i+1].valeur_num) && (i < 2) && (combinaison == 0) )		// si il y a une paire avant que le nombre de cartes permette d'avoir une autre paire
 			{
 				for ( int j=i+2 ; j < 4 ; j++ )		// vérification si, dans le reste des cartes, ya une autre paire
 				{
@@ -394,7 +452,6 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 		}
 		
 	}
-	cout << endl << "combi : " << combinaison << endl ;
 	// Mise à jour du gain
 	switch (combinaison)
 	{
@@ -414,9 +471,147 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 		break;
 		case 8 : gain = mise * 3;
 		break;
-		default : cout << endl << "Vous ne gagnez rien !" << endl;
+		//default : cout << endl << "Vous ne gagnez rien !" << endl;
 	}
 	
+}
+
+void trier_main(T_compo_paquet main[])
+{
+	T_compo_paquet temp ;
+	bool modif = true ;
+	
+	while (modif==true)
+	{
+		modif = false ;
+		for (int i=0 ; i < 4 ; i++)
+		{
+			if (main[i].valeur_num > main[i+1].valeur_num)
+			{
+				temp = main[i] ;
+				main[i] = main[i+1] ;
+				main[i+1]=temp ;
+				modif = true ;
+			}
+		}
+	}
+}
+
+void evaluer_joker(/*T_compo_paquet cartes[] ,*/ T_compo_paquet main[] , float &gain , float mise , int nb_joker)
+{
+	T_compo_paquet tabJoker[54];	//jeu de cartes de test
+	T_compo_paquet temp_main[5];		//main originale
+	T_compo_paquet temp_joker[5] ;		// Main dans laquelle le joker est à la meilleure place
+	T_compo_paquet temp ;
+	bool flag=true;
+	int temp_gain = 0 ;
+	
+	creation_tas(tabJoker);		//jeu de cartes de test
+	
+	cout << endl << "JK : " << nb_joker << endl ;
+	
+	for (int i=0 ; i < 5 ; i++)	//variable temp_main est la variable temp que l'on peut modifier
+	{
+		temp_main[i] = main[i];
+	}
+	
+	switch (nb_joker)
+	{
+		case 0 :	evaluer_main(main, gain, mise) ;
+		break;
+		
+		case 1 :	for (int i=0 ; i < 52 ; i++)
+					{
+						for(int j=0 ; j < 5 ; j++) //trouver le JK dans la main, et le changer de valeur
+						{
+							if ((temp_main[j].valeur == "JR") || (temp_main[j].valeur == "JN"))
+							{
+								temp_main[j].valeur_num	= tabJoker[i].valeur_num;
+								temp_main[j].sorte		= tabJoker[i].sorte;
+								//cout << endl << "Joker : " << temp_main[j].valeur << ", " << temp_main[j].valeur_num << " de " << temp_main[j].sorte << endl ;
+							}
+						}
+						evaluer_main(temp_main,gain,mise);
+						//cout << endl << "Gain evalues : " << gain << "	Gains enregistres : " << temp_gain << endl;
+						if (gain > temp_gain)
+						{
+							for (int j=0 ; j < 5 ; j++)
+							{
+								temp_joker[j] = temp_main[j];
+							}
+							temp_gain = gain;
+						}
+						for (int j=0 ; j < 5 ; j++)
+						{
+							temp_main[j] = main[j];
+						}
+					}
+					gain = temp_gain;
+					if (gain != 0)
+					{
+						cout << endl << endl << "Main apres calcul de la meilleure place :" << endl ;
+						display(temp_joker,5);
+					}
+					else
+					{
+						trier_main(main);	//dans le cas où elle ne serait pas triée (quand on utilise triche par example)
+						display(main,5);
+					}
+					
+		break;
+		
+		case 2 : 	for (int i=0 ; i < 52 ; i++)
+					{
+						for(int j=0 ; j < 52 ; j++)
+						{
+							for(int jk1=0 ; jk1 < 5 ; jk1++) //trouver les JK dans la main
+							{
+								if (temp_main[jk1].valeur == "JR")	//first JK
+								{
+									for (int jk2=0 ; jk2 < 5 ; jk2++)
+									{
+										if (temp_main[jk2].valeur == "JN")	// second JK
+										{
+											temp_main[jk1].valeur_num	= tabJoker[i].valeur_num;
+											temp_main[jk1].sorte		= tabJoker[i].sorte;
+											temp_main[jk2].valeur_num	= tabJoker[j].valeur_num;
+											temp_main[jk2].sorte		= tabJoker[j].sorte;
+										//	cout << endl << "Joker1 : " << temp_main[jk1].valeur << ", " << temp_main[jk1].valeur_num << " de " << temp_main[jk1].sorte << endl ;
+										//	cout << endl << "Joker2 : " << temp_main[jk2].valeur << ", " << temp_main[jk2].valeur_num << " de " << temp_main[jk2].sorte << endl ;										
+										}
+									}
+								}
+							}
+							evaluer_main(temp_main,gain,mise);
+							if (gain > temp_gain)
+							{
+								for (int k=0 ; k < 5 ; k++)
+								{
+									temp_joker[k] = temp_main[k];
+								}
+								temp_gain = gain;
+							}
+							for (int k=0 ; k < 5 ; k++)
+							{
+								temp_main[k] = main[k];
+							}
+						}
+					}
+					evaluer_main(temp_joker,gain,mise);
+					gain = temp_gain ;
+					if (temp_gain != 0)
+					{
+						cout << endl << endl << "Main apres calcul de la meilleure place :" << endl ;
+						display(temp_joker,5);
+					}
+					else
+					{
+						trier_main(main);	//dans le cas où elle ne serait pas triée (quand on utilise triche par example)
+						display(main,5);
+					}
+		break;
+	}
+	cout << endl << endl << "Gain final : " << gain << " $." << endl ;
 }
 
 bool rejouer(bool &play)		//Affiche/demande au joueur s'il veut rejouer
@@ -472,37 +667,38 @@ int main ()
 	bool triche = false;
 	float mise = 0 ;
 	float gain = 0 ;
+	int nb_joker = 0 ;
+	T_compo_paquet cartes[54] ;
+	T_compo_paquet main[5] ;
+	T_compo_paquet temp[5] ;
 	
 	demarrer(jouer, triche) ;
 	while ((playagain) || (jouer))
 	{
 		system("cls") ;
 		
-		T_compo_paquet cartes[52] ;
+		T_compo_paquet cartes[54] ;
 		T_compo_paquet main[5] ;
 		playagain = false ;
 		jouer = false ;
+		int nb_joker = 0 ;
 		
 		creation_tas(cartes) ;
 		demander_mise(mise);
-		
 		if (triche)
 		{
-			choisir_main(cartes,main);
+			choisir_main(cartes,main, nb_joker);
 		}
 		else
 		{
-			donne_main(cartes,main) ;
+			donne_main(cartes,main,nb_joker) ;
+			garde_main(cartes,main) ;
 		}
-		
-		brasser(cartes);
-		evaluer_main(main,gain,mise);
-		garde_main(cartes,main) ;
-		evaluer_main(main,gain,mise);
-		cout << endl << "gain : " << gain << endl ;
+		//brasser(cartes);
+		//evaluer_main(main,gain,mise);
+		evaluer_joker(main,gain,mise,nb_joker);
 		rejouer(playagain) ;
 	}
-	
 	system("cls") ;
 	cout << "Ce modeste jeu " << char(133) << ' ' << char(130) << 't' << char(130) << " d" << char(130) << "velopp" << char(130) << " par :" << endl;
 	cout << "Aleck Parent" << endl << "Maxime Damour";

@@ -62,14 +62,6 @@ void choisir_main(T_compo_paquet cartes[] , T_compo_paquet main[], int &nb_joker
 
 	system("cls");
 	
-	for (int i=0 ; i < 5 ; i++)	//vérifie le nombre de joker dans la main et change j
-	{
-		if (main[i].valeur_num == 15)
-		{
-			nb_joker++;
-		}
-	}
-	
 	cout << endl << endl << "Voici votre main : " << endl << endl ;
 	display(main,5);
 	
@@ -122,7 +114,7 @@ void brasser(T_compo_paquet cartes[])
 	{
 		for ( int j=0 ; j < 6 ; j++ )		//Le nombre aléatoire seront changé à chaque boucle
 		{									//les positions seront interverti deux à deux
-			tabalea[j] = rand() %52 ;		//On set un tableau de nombre aléatoire compris entre 0 et 54 exclu	(54 cartes, de 0 à 53)
+			tabalea[j] = rand() %54 ;		//On set un tableau de nombre aléatoire compris entre 0 et 54 exclu	(54 cartes, de 0 à 53)
 		}
 		for ( int j=0 ; j < 6 ; j++ )		//interpositionnage deux par deux des éléments de la structure
 		{
@@ -301,6 +293,27 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 	
 }
 
+void trier_main(T_compo_paquet main[])
+{
+	T_compo_paquet temp ;
+	bool modif = true ;
+	
+	while (modif==true)
+	{
+		modif = false ;
+		for (int i=0 ; i < 4 ; i++)
+		{
+			if (main[i].valeur_num > main[i+1].valeur_num)
+			{
+				temp = main[i] ;
+				main[i] = main[i+1] ;
+				main[i+1]=temp ;
+				modif = true ;
+			}
+		}
+	}
+}
+
 void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 {
 	T_compo_paquet temp ;
@@ -476,27 +489,6 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 	
 }
 
-void trier_main(T_compo_paquet main[])
-{
-	T_compo_paquet temp ;
-	bool modif = true ;
-	
-	while (modif==true)
-	{
-		modif = false ;
-		for (int i=0 ; i < 4 ; i++)
-		{
-			if (main[i].valeur_num > main[i+1].valeur_num)
-			{
-				temp = main[i] ;
-				main[i] = main[i+1] ;
-				main[i+1]=temp ;
-				modif = true ;
-			}
-		}
-	}
-}
-
 void evaluer_joker(/*T_compo_paquet cartes[] ,*/ T_compo_paquet main[] , float &gain , float mise , int nb_joker)
 {
 	T_compo_paquet tabJoker[54];	//jeu de cartes de test
@@ -507,6 +499,14 @@ void evaluer_joker(/*T_compo_paquet cartes[] ,*/ T_compo_paquet main[] , float &
 	int temp_gain = 0 ;
 	
 	creation_tas(tabJoker);		//jeu de cartes de test
+	
+	for (int i=0 ; i < 5 ; i++)	//vérifie le nombre de joker dans la main et change j
+	{
+		if (main[i].valeur_num == 15)
+		{
+			nb_joker++;
+		}
+	}
 	
 	cout << endl << "JK : " << nb_joker << endl ;
 	
@@ -633,28 +633,55 @@ bool rejouer(bool &play)		//Affiche/demande au joueur s'il veut rejouer
 	}
 }
 
-void demarrer(bool &jouer, bool &triche)		//premiere fonction appellée. Elle affiche le menu de démarrage, et demande au joueur de choisir entre jouer et arrêter le processus
+void information(bool &info)
 {
+	system("cls");
+	char rep;
+	
+	cout << "Informations compl" << char(130) << "mentaires :" << endl;
+	cout << "Le mode 'Jouer' permet de demarrer le jeu normalement. Les cartes seront brassees, distribuée et pourront être échangée." << endl;
+	cout << "Le mode 'Tricher' permet de lancer le jeu en mode de triche, dans lequel vous pouvez choisir vos cartes selon leur indice dans le paquet";
+	cout << "A noter toutefois qu'il n'est pas possible d'echanger les cartes dans ce mode, vos cartes seront donc juste triees" << endl << endl;
+	cout << "N.B : Vous ne pouvez changer de mode de jeu uniquement au menu du jeu. Celui-ci ne s'affichera qu'a l'ouverture du programme." << endl;
+	cout << "Ainsi, nous vous invitons a relancer le programme pour changer de mode. Notez aussi qu'en mode triche, la mise est demandee et les gains sont calcules.";
+	cout << endl << endl << endl << "1 - Retour au menu" << endl << "Indiquez ce que vous voulez faire : ";
+	cin >> rep ;
+	while (rep != '1')
+	{
+		cout << endl << "Saisie invalide." << endl << "Indiquez ce que vous voulez faire : ";
+		cin >> rep ;
+	}
+	info = false;
+	
+}
+
+void demarrer(bool &jouer, bool &triche, bool &info)		//premiere fonction appellée. Elle affiche le menu de démarrage, et demande au joueur de choisir entre jouer et arrêter le processus
+{
+	system("cls");
+	
 	int rep ;
 	cout << setfill('=') << setw(25) << ' ' << "Nom de code: Poker Machine " << setw(25) << '=' << setfill(' ') << endl ;
 	cout << endl << endl << endl ;
 	cout << "Que voulez vous faire ?" << endl ;
 	cout << "1 - Jouer " << char(133) << " Ndc: Poker Machine." << endl ;
 	cout << "2 - Tricher" << endl ;
-	cout << "3 - Quitter" << endl ;
+	cout << "3 - Informations" << endl ;
+	cout << "4 - Quitter" << endl ;
 	cout << "Entrez votre choix : " ; cin >> rep ;
-	while ((rep != 2) && (rep != 1))
+	while ((rep < 1) || (rep > 4))
 	{
 		cout << endl << "Saisie invalide. \nEntrez votre choix : " ; cin >> rep ;
 	}
 	
 	switch (rep)
 	{
-		case 1 : jouer = true;
+		case 1 : jouer	= true 	; 	info 	= false ;
 		break;
-		case 2 : jouer  = true; triche = true ;
+		case 2 : jouer 	= true 	; 	triche 	= true 	; info = false ;
 		break;
-		case 3 : jouer  = false;
+		case 3 : info  	= true 	;	information(info);
+		break;
+		case 4 : jouer 	= false ; 	info 	= false ;
 		break;
 	}
 }
@@ -662,41 +689,46 @@ void demarrer(bool &jouer, bool &triche)		//premiere fonction appellée. Elle aff
 
 int main ()
 {	
-	bool playagain = false;
-	bool jouer = false;
-	bool triche = false;
-	float mise = 0 ;
-	float gain = 0 ;
-	int nb_joker = 0 ;
 	T_compo_paquet cartes[54] ;
 	T_compo_paquet main[5] ;
-	T_compo_paquet temp[5] ;
+	float mise 		= 0 ;
+	float gain 		= 0 ;
+	int nb_joker 	= 0 ;
+	bool playagain 	= false ;
+	bool jouer 		= false ;
+	bool triche 	= false ;
+	bool info;
 	
-	demarrer(jouer, triche) ;
+	do
+	{
+		demarrer(jouer, triche, info) ;
+	}while(info);
+	
 	while ((playagain) || (jouer))
 	{
 		system("cls") ;
 		
-		T_compo_paquet cartes[54] ;
-		T_compo_paquet main[5] ;
 		playagain = false ;
 		jouer = false ;
 		int nb_joker = 0 ;
 		
 		creation_tas(cartes) ;
-		demander_mise(mise);
+		//demander_mise(mise);
+		mise = 1 ;
 		if (triche)
 		{
 			choisir_main(cartes,main, nb_joker);
+			evaluer_joker(main,gain,mise,nb_joker);
 		}
 		else
 		{
+			brasser(cartes);
 			donne_main(cartes,main,nb_joker) ;
+			evaluer_joker(main,gain,mise,nb_joker);
 			garde_main(cartes,main) ;
+			evaluer_joker(main,gain,mise,nb_joker);
 		}
-		//brasser(cartes);
-		//evaluer_main(main,gain,mise);
-		evaluer_joker(main,gain,mise,nb_joker);
+		
 		rejouer(playagain) ;
 	}
 	system("cls") ;

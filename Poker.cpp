@@ -10,14 +10,14 @@ struct T_compo_paquet
 {
 	string 	nom ;
 	string 	sorte ;
-	string 	valeur ;		//string parce que 10 n'est pas un caractère
-	int 	valeur_num ; 	//valeur numérique des cartes : 2 pour un 2, 14 pour un as, 15 pour les Jokers
+	string 	valeur ;		//string parce que 10 n'est pas un caractÃ¨re
+	int 	valeur_num ; 	//valeur numÃ©rique des cartes : 2 pour un 2, 14 pour un as, 15 pour les Jokers
 	bool 	garder ;
 	bool 	owned	;  
 };
 
-void display(T_compo_paquet tab[], int c)		//Cette fonction est à enlever avant que le TP ne soit rendu
-{											//Elle permet d'afficher toutes les cartes dans l'ordre, donc de vérifier nos fonctions de creation et brassage
+void display(T_compo_paquet tab[], int c)		//Cette fonction est Ã  enlever avant que le TP ne soit rendu
+{											//Elle permet d'afficher toutes les cartes dans l'ordre, donc de vÃ©rifier nos fonctions de creation et brassage
 	for ( int i=0 ; i < c ; i++ )	//Good thing to know : elle affiche aussi bien (cartes,52) que (main,5)
 	{
 		if ((tab[i].valeur == "JN") || (tab[i].valeur == "JR"))
@@ -85,8 +85,8 @@ void creation_tas(T_compo_paquet cartes[])
 				cartes[count].valeur		= tabvaleur[j] ;
 				cartes[count].valeur_num	= tabvaleur_num[j] ;
 				cartes[count].nom			= tabnom[j] ;
-				cartes[count].garder		= false	;	//quand il choisira quoi garder, s'il n'entre rien, toutes les cartes seront changées
-				cartes[count].owned			= false	;	//quand il faudra changer les cartes, ce sera le flag de "est-ce qu'il l'a déjà eu ?"
+				cartes[count].garder		= false	;	//quand il choisira quoi garder, s'il n'entre rien, toutes les cartes seront changÃ©es
+				cartes[count].owned			= false	;	//quand il faudra changer les cartes, ce sera le flag de "est-ce qu'il l'a dÃ©jÃ  eu ?"
 				count ++;									//owned = true quand il aura sa main
 			}
 		}
@@ -106,17 +106,17 @@ void creation_tas(T_compo_paquet cartes[])
 
 void brasser(T_compo_paquet cartes[])
 {
-	srand (time(NULL)) ;					//initialisation de l'aléatoire
+	srand (time(NULL)) ;					//initialisation de l'alÃ©atoire
 	T_compo_paquet temp ;
 	int tabalea[6] = {0} ;
 	
 	for (int i=0 ; i < 100 ; i++)			//Brassage 100
 	{
-		for ( int j=0 ; j < 6 ; j++ )		//Le nombre aléatoire seront changé à chaque boucle
-		{									//les positions seront interverti deux à deux
-			tabalea[j] = rand() %54 ;		//On set un tableau de nombre aléatoire compris entre 0 et 54 exclu	(54 cartes, de 0 à 53)
+		for ( int j=0 ; j < 6 ; j++ )		//Le nombre alÃ©atoire seront changÃ© Ã  chaque boucle
+		{									//les positions seront interverti deux Ã  deux
+			tabalea[j] = rand() %54 ;		//On set un tableau de nombre alÃ©atoire compris entre 0 et 54 exclu	(54 cartes, de 0 Ã  53)
 		}
-		for ( int j=0 ; j < 6 ; j++ )		//interpositionnage deux par deux des éléments de la structure
+		for ( int j=0 ; j < 6 ; j++ )		//interpositionnage deux par deux des Ã©lÃ©ments de la structure
 		{
 			temp				=	cartes[tabalea[j]] ;		
 			cartes[tabalea[j]]	=	cartes[tabalea[j+1]] ;
@@ -127,7 +127,7 @@ void brasser(T_compo_paquet cartes[])
 
 float demander_mise(float &x)
 {
-	cout << endl << "Veuillez indiquez votre mise : " ; cin >> x ; cout << endl ; // Confirmation à faire ? Utile ?
+	cout << endl << "Veuillez indiquez votre mise : " ; cin >> x ; cout << endl ; // Confirmation Ã  faire ? Utile ?
 	
 	while(x <= 0)
 	{
@@ -138,15 +138,15 @@ float demander_mise(float &x)
 	return x ;
 }
 
-void donne_main(T_compo_paquet cartes[], T_compo_paquet main[], int &nb_joker)		//sert à donner et à redonner la main et détermine le nombre de joker
+void donne_main(T_compo_paquet cartes[], T_compo_paquet main[], int &nb_joker)		//sert Ã  donner et Ã  redonner la main et dÃ©termine le nombre de joker
 {
 	T_compo_paquet temp ;
 	int c = 0;
 	bool modif = true;
 	
-	system("cls");		// possiblement, il y a autre part où il faudrait l'enlever.
+	system("cls");		// possiblement, il y a autre part oÃ¹ il faudrait l'enlever.
 	
-	if (main[0].nom == "")		// Vérifie si la main est vide (si c'est la premiere fois que la fonction est appelée)
+	if (main[0].nom == "")		// VÃ©rifie si la main est vide (si c'est la premiere fois que la fonction est appelÃ©e)
 	{
 		for (int i=0 ; i < 5 ; i++)
 		{
@@ -184,7 +184,7 @@ void donne_main(T_compo_paquet cartes[], T_compo_paquet main[], int &nb_joker)		
 		}
 	}
 	
-	for (int i=0 ; i < 5 ; i++)	//vérifie le nombre de joker dans la main et change j
+	for (int i=0 ; i < 5 ; i++)	//vÃ©rifie le nombre de joker dans la main et change j
 	{
 		if (main[i].valeur_num == 15)
 		{
@@ -201,7 +201,7 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 	int tabgarde[5] = {0};
 	int indice ;
 	int count = 0;		//compteur pour le while
-	char rep;			//confirmation de l'échange
+	char rep;			//confirmation de l'Ã©change
 	int nb_joker ;
 	
 	for (int i=0 ; i < 5 ; i++)
@@ -215,7 +215,7 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 	do
 	{
 		cout << endl << "Indiquez l'indice : " ; cin >> indice ; cout << endl ;
-		while (( indice < 0 ) || ( indice > 5 ))		//vérification de la saisie
+		while (( indice < 0 ) || ( indice > 5 ))		//vÃ©rification de la saisie
 		{
 			cout << endl << "Saisie invalide. Veuillez entrer un indice compris entre 1 et 5." << endl;
 			cout << "Indiquez l'indice : " ; cin >> indice ; cout << endl << endl ;
@@ -225,21 +225,21 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 	}
 	while (( indice != 0 )&&( count < 5 ));
 	
-	count = 0;		//En vue d'une réutilisation prochaine
+	count = 0;		//En vue d'une rÃ©utilisation prochaine
 	
-	for ( int i=0 ; i < 5 ; i++ )		//vérifie quelles cartes il a gardées
+	for ( int i=0 ; i < 5 ; i++ )		//vÃ©rifie quelles cartes il a gardÃ©es
 	{
 		if (tabgarde[i] != 0)
 		{
-			main[tabgarde[i]-1].garder = true ;		//tabgarde[i]-1 c'est parce que le tableau commence toujours à 0
-			count++;		//réutilisation dde la variable pour compter le nombre de carte échangée.
+			main[tabgarde[i]-1].garder = true ;		//tabgarde[i]-1 c'est parce que le tableau commence toujours Ã  0
+			count++;		//rÃ©utilisation dde la variable pour compter le nombre de carte Ã©changÃ©e.
 		}
 	}
 	system("cls") ;		//Efface la console
 	
 	if (count !=0)
 	{
-		cout << endl << "Les cartes suivantes seront " << char(130) << "chang" << char(130) << "es :" << endl ;		//affichage des cartes ECHANGÉES
+		cout << endl << "Les cartes suivantes seront " << char(130) << "chang" << char(130) << "es :" << endl ;		//affichage des cartes ECHANGÃ‰ES
 		
 		for ( int i=0 ; i < 5 ; i++ )
 		{
@@ -249,7 +249,7 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 			}
 		}
 		
-		cout << endl << "Les cartes suivantes seront gard" << char(130) << "es : " << endl ;	//affichage des cartes GARDÉES
+		cout << endl << "Les cartes suivantes seront gard" << char(130) << "es : " << endl ;	//affichage des cartes GARDÃ‰ES
 		
 		for ( int i=0 ; i < 5 ; i++ )
 		{		
@@ -265,9 +265,9 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 	}
 	
 	
-	cout << endl << "Confirmer l'" << char(130) << "change ? (o/n) : "; cin >> rep ; cout << endl ;	//Confirmation de l'échange
+	cout << endl << "Confirmer l'" << char(130) << "change ? (o/n) : "; cin >> rep ; cout << endl ;	//Confirmation de l'Ã©change
 
-	while ((toupper(rep) != 'O') && (toupper(rep) != 'N'))		//Vérification de la saisie
+	while ((toupper(rep) != 'O') && (toupper(rep) != 'N'))		//VÃ©rification de la saisie
 	{	
 		cout << endl << "Saisie invalide." << endl;
 		cout << endl << "Confirmer l'" << char(130) << "change ? (o/n) : "; cin >> rep ; cout << endl ;
@@ -276,16 +276,16 @@ void garde_main(T_compo_paquet cartes[] , T_compo_paquet main[])
 	{
 		case 'O' :	donne_main(cartes,main,nb_joker);		//La fonction se termine et change les cartes avec "garde=faux"
 					for ( int i=0 ; i < 5 ; i++ )	
-					{	//set main.garder à faux, pour que main[i] puisse être réutilisable sans probleme
+					{	//set main.garder Ã  faux, pour que main[i] puisse Ãªtre rÃ©utilisable sans probleme
 						main[i].garder = false ;
 					}
 		break;
 		
 		case 'N' : 	system("cls");
-					cout << endl << endl << "Voici votre main : " << endl << endl ; display(main,5) ;	//affichage avec fonction qui se trouve au début
-					garde_main(cartes,main);		//La fonction se relance MAIS ELLE DEVRAIT ÊTRE EN DESSOUS DE LA REMISE À 0
+					cout << endl << endl << "Voici votre main : " << endl << endl ; display(main,5) ;	//affichage avec fonction qui se trouve au dÃ©but
+					garde_main(cartes,main);		//La fonction se relance MAIS ELLE DEVRAIT ÃŠTRE EN DESSOUS DE LA REMISE Ã€ 0
 //					for ( int i=0 ; i < 5 ; i++ )
-//					{	//set main.garder à faux, pour que main[i] puisse être réutilisable sans probleme
+//					{	//set main.garder Ã  faux, pour que main[i] puisse Ãªtre rÃ©utilisable sans probleme
 //						main[i].garder = false ;
 //					}
 		break;
@@ -339,7 +339,7 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 	
 	flag = true;
 	
-	for ( int i=0 ; i < 4 ; i ++ )		// Vérification des sortes
+	for ( int i=0 ; i < 4 ; i ++ )		// VÃ©rification des sortes
 	{
 		if (main[i].sorte != main[i+1].sorte)
 		{
@@ -347,7 +347,7 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 		}
 	}
 
-	if (flag)		// SI toutes les cartes sont de la même sorte
+	if (flag)		// SI toutes les cartes sont de la mÃªme sorte
 	{
 		for (int i=0 ; i < 4 ; i++ )
 		{
@@ -358,7 +358,7 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 		}
 		if (!flag)
 		{
-			combinaison = 5;		// 5 cartes de la même sorte
+			combinaison = 5;		// 5 cartes de la mÃªme sorte
 		}
 		else
 		{
@@ -374,10 +374,10 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 		}	
 	}
 	
-	else			// SINON (si pas toutes des la mêmes sortes)
+	else			// SINON (si pas toutes des la mÃªmes sortes)
 	{
 		flag = true ;
-		for ( int i=0 ; i < 4 ; i++ )	//Vérifie si les cartes se suivent
+		for ( int i=0 ; i < 4 ; i++ )	//VÃ©rifie si les cartes se suivent
 		{
 			if (main[i].valeur_num != main[i+1].valeur_num - 1)
 			{
@@ -386,14 +386,14 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 		}
 		if (flag)
 		{
-			combinaison = 4 ;		// Suite de 5 cartes (pas de la même sorte)
+			combinaison = 4 ;		// Suite de 5 cartes (pas de la mÃªme sorte)
 		}
 		flag = true ;
 		if (main[0].valeur_num != main[1].valeur_num)		// Si la premiere carte differente de la 2nd (test des 4 cartes pareilles)
 		{
-			for ( int i=1 ; i < 4 ; i++ )		// Vérification si les cartes restantes sont identiques entre elles
+			for ( int i=1 ; i < 4 ; i++ )		// VÃ©rification si les cartes restantes sont identiques entre elles
 			{
-				if (main[i].valeur_num != main[i+1].valeur_num)	// les cartes identiques sont à la fin
+				if (main[i].valeur_num != main[i+1].valeur_num)	// les cartes identiques sont Ã  la fin
 				{
 					flag = false ;
 				}
@@ -403,25 +403,25 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 				combinaison = 3 ;	// 4 cartes pareilles
 			}
 		}
-		else		// Test dans le cas ou les 4 cartes identiques sont au début
+		else		// Test dans le cas ou les 4 cartes identiques sont au dÃ©but
 		{
 			flag = true ;
-			for ( int i=0 ; i < 3 ; i++ )	// vérifie les 4 premieres cartes si elles sont IDENTIQUES
+			for ( int i=0 ; i < 3 ; i++ )	// vÃ©rifie les 4 premieres cartes si elles sont IDENTIQUES
 			{
 				if (main[i].valeur_num != main[i+1].valeur_num)
 				{
 					flag = false ;	
 				}
 			}
-			if  (flag) /*&& (main[3].valeur_num != main[4].valeur_num) )*/	// Si la dernière cartes est differente de l'avant derniere
+			if  (flag) /*&& (main[3].valeur_num != main[4].valeur_num) )*/	// Si la derniÃ¨re cartes est differente de l'avant derniere
 			{
 				combinaison = 3 ; //4 cartes identiques
 			}
 		}
 		compteur = 1 ;
-		for (int i=0 ; i < 4 ; i++)		//Vérification de la 6e possibilié : FullHouse
+		for (int i=0 ; i < 4 ; i++)		//VÃ©rification de la 6e possibiliÃ© : FullHouse
 		{
-			if ( (main[i].valeur_num == main[i+1].valeur_num) )	// Compteur ne peut valoir que 2 ou 3, puisque la paire ne peut être qu'au début et à la fin.
+			if ( (main[i].valeur_num == main[i+1].valeur_num) )	// Compteur ne peut valoir que 2 ou 3, puisque la paire ne peut Ãªtre qu'au dÃ©but et Ã  la fin.
 			{
 				compteur++ ;
 				if (compteur == 3)
@@ -435,18 +435,18 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 				compteur = 1 ;	
 			}
 		}
-		if ((flag) && (combinaison == 0))	// Si 3 cartes sont identiques d'AFFILÉ un fois dans la main
+		if ((flag) && (combinaison == 0))	// Si 3 cartes sont identiques d'AFFILÃ‰ un fois dans la main
 		{
 			combinaison = 7 ;	// Il y a au mois 3 cartes IDENTIQUES
-			if ( (compteur == 2) && (combinaison == 7) )	// combinaison = 7 pour éviter des problemes de gain plus faibles qu'ils ne devraient être
+			if ( (compteur == 2) && (combinaison == 7) )	// combinaison = 7 pour Ã©viter des problemes de gain plus faibles qu'ils ne devraient Ãªtre
 			{
-				combinaison = 6 ;		// Il y a FullHouse, 3 cartes identiques au début, 2 cartes identiques à la fin
+				combinaison = 6 ;		// Il y a FullHouse, 3 cartes identiques au dÃ©but, 2 cartes identiques Ã  la fin
 			}
 			else
 			{
 				if ( (main[0].valeur_num == main[1].valeur_num) && (combinaison == 7) && (compteur == 3) )
 				{
-					combinaison = 6;	//deux cartes identiques au début, 3 cartes identiques à la fin
+					combinaison = 6;	//deux cartes identiques au dÃ©but, 3 cartes identiques Ã  la fin
 				}
 			}
 		}
@@ -454,7 +454,7 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 		{
 			if ( (main[i].valeur_num == main[i+1].valeur_num) && (i < 2) && (combinaison == 0) )		// si il y a une paire avant que le nombre de cartes permette d'avoir une autre paire
 			{
-				for ( int j=i+2 ; j < 4 ; j++ )		// vérification si, dans le reste des cartes, ya une autre paire
+				for ( int j=i+2 ; j < 4 ; j++ )		// vÃ©rification si, dans le reste des cartes, ya une autre paire
 				{
 					if (main[j].valeur_num == main[j+1].valeur_num)
 					{
@@ -465,7 +465,7 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 		}
 		
 	}
-	// Mise à jour du gain
+	// Mise Ã  jour du gain
 	switch (combinaison)
 	{
 		case 1 : gain = mise * 40;
@@ -493,14 +493,14 @@ void evaluer_joker(/*T_compo_paquet cartes[] ,*/ T_compo_paquet main[] , float &
 {
 	T_compo_paquet tabJoker[54];	//jeu de cartes de test
 	T_compo_paquet temp_main[5];		//main originale
-	T_compo_paquet temp_joker[5] ;		// Main dans laquelle le joker est à la meilleure place
+	T_compo_paquet temp_joker[5] ;		// Main dans laquelle le joker est Ã  la meilleure place
 	T_compo_paquet temp ;
 	bool flag=true;
 	int temp_gain = 0 ;
 	
 	creation_tas(tabJoker);		//jeu de cartes de test
 	
-	for (int i=0 ; i < 5 ; i++)	//vérifie le nombre de joker dans la main et change j
+	for (int i=0 ; i < 5 ; i++)	//vÃ©rifie le nombre de joker dans la main et change j
 	{
 		if (main[i].valeur_num == 15)
 		{
@@ -554,7 +554,7 @@ void evaluer_joker(/*T_compo_paquet cartes[] ,*/ T_compo_paquet main[] , float &
 					}
 					else
 					{
-						trier_main(main);	//dans le cas où elle ne serait pas triée (quand on utilise triche par example)
+						trier_main(main);	//dans le cas oÃ¹ elle ne serait pas triÃ©e (quand on utilise triche par example)
 						display(main,5);
 					}
 					
@@ -606,7 +606,7 @@ void evaluer_joker(/*T_compo_paquet cartes[] ,*/ T_compo_paquet main[] , float &
 					}
 					else
 					{
-						trier_main(main);	//dans le cas où elle ne serait pas triée (quand on utilise triche par example)
+						trier_main(main);	//dans le cas oÃ¹ elle ne serait pas triÃ©e (quand on utilise triche par example)
 						display(main,5);
 					}
 		break;
@@ -639,9 +639,9 @@ void information(bool &info)
 	char rep;
 	
 	cout << "Informations compl" << char(130) << "mentaires :" << endl;
-	cout << "Le mode 'Jouer' permet de demarrer le jeu normalement. Les cartes seront brassees, distribuée et pourront être échangée." << endl;
-	cout << "Le mode 'Tricher' permet de lancer le jeu en mode de triche, dans lequel vous pouvez choisir vos cartes selon leur indice dans le paquet";
-	cout << "A noter toutefois qu'il n'est pas possible d'echanger les cartes dans ce mode, vos cartes seront donc juste triees" << endl << endl;
+	cout << "Le mode 'Jouer' permet de demarrer le jeu normalement. Les cartes seront brassees, distribuee et pourront Ãªtre Ã©changee." << endl;
+	cout << "Le mode 'Tricher' permet de lancer le jeu en mode de triche, dans lequel vous pouvez choisir vos cartes selon leur indice dans le paquet.";
+	cout << " A noter toutefois qu'il n'est pas possible d'echanger les cartes dans ce mode, vos cartes seront donc juste triees" << endl << endl;
 	cout << "N.B : Vous ne pouvez changer de mode de jeu uniquement au menu du jeu. Celui-ci ne s'affichera qu'a l'ouverture du programme." << endl;
 	cout << "Ainsi, nous vous invitons a relancer le programme pour changer de mode. Notez aussi qu'en mode triche, la mise est demandee et les gains sont calcules.";
 	cout << endl << endl << endl << "1 - Retour au menu" << endl << "Indiquez ce que vous voulez faire : ";
@@ -655,7 +655,7 @@ void information(bool &info)
 	
 }
 
-void demarrer(bool &jouer, bool &triche, bool &info)		//premiere fonction appellée. Elle affiche le menu de démarrage, et demande au joueur de choisir entre jouer et arrêter le processus
+void demarrer(bool &jouer, bool &triche, bool &info)		//premiere fonction appellÃ©e. Elle affiche le menu de dÃ©marrage, et demande au joueur de choisir entre jouer et arrÃªter le processus
 {
 	system("cls");
 	

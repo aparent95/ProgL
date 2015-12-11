@@ -639,7 +639,7 @@ void information(bool &info)
 	char rep;
 	
 	cout << "Informations compl" << char(130) << "mentaires :" << endl;
-	cout << "Le mode 'Jouer' permet de demarrer le jeu normalement. Les cartes seront brassees, distribuee et pourront être échangee." << endl;
+	cout << "Le mode 'Jouer' permet de demarrer le jeu normalement. Les cartes seront brassees, distribuees et pourront etre échangees." << endl;
 	cout << "Le mode 'Tricher' permet de lancer le jeu en mode de triche, dans lequel vous pouvez choisir vos cartes selon leur indice dans le paquet.";
 	cout << " A noter toutefois qu'il n'est pas possible d'echanger les cartes dans ce mode, vos cartes seront donc juste triees" << endl << endl;
 	cout << "N.B : Vous ne pouvez changer de mode de jeu uniquement au menu du jeu. Celui-ci ne s'affichera qu'a l'ouverture du programme." << endl;

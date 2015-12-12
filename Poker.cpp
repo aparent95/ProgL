@@ -627,10 +627,10 @@ void information(bool &info, bool &jouer)
 	char rep;
 	
 	cout << "Informations compl" << char(130) << "mentaires :" << endl;
-	cout << "Le mode 'Jouer' permet de demarrer le jeu normalement. Les cartes seront brassees, distribuée et pourront être échangée." << endl;
-	cout << "Le mode 'Tricher' permet de lancer le jeu en mode de triche, dans lequel vous pouvez choisir vos cartes selon leur indice dans le paquet" << endl;
+	cout << "Le mode 'Jouer' permet de demarrer le jeu normalement. Les cartes seront brassees, distribuées et pourront etre echangees." << endl;
+	cout << "Le mode 'Tricher' permet de lancer le jeu en mode de triche, dans lequel vous pouvez choisir vos cartes selon leur indice dans le paquet." << endl;
 	cout << "Le mode 'Tester' fonctionne comme 'Jouer', a ceci pres qu'il parametre la mise a 1, et ne demande pas le changement de cartes. Il affiche votre main, vos gains avec la main presente, pause le ";
-	cout << "systeme, puis, en appuyant sur une touche, vous recommencez le meme processus. C'est un outil de test rapide.";
+	cout << "systeme, puis, en appuyant sur une touche, vous recommencez le meme processus. C'est un outil de test rapide. ";
 	cout << "A noter toutefois qu'il n'est pas possible d'echanger les cartes dans ce mode, vos cartes seront donc juste triees" << endl << endl;
 	cout << "N.B : Vous ne pouvez changer de mode de jeu uniquement au menu du jeu. Celui-ci ne s'affichera qu'a l'ouverture du programme." << endl;
 	cout << "Ainsi, nous vous invitons a relancer le programme pour changer de mode. Notez aussi qu'en mode triche, la mise est demandee et les gains sont calcules." << endl << endl;

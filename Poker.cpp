@@ -22,11 +22,11 @@ void display(T_compo_paquet tab[], int c)		//Cette fonction est à enlever avant 
 	{
 		if ((tab[i].valeur == "JN") || (tab[i].valeur == "JR"))
 		{
-			cout << "(" << i+1 << ") " << tab[i].nom << endl ;
+			cout << "(" << i+1 << ") " << tab[i].nom << " (valeur: "<< tab[i].valeur_num << ")" << endl ;
 		}
 		else
 		{
-			cout << "(" << i+1 << ") " << tab[i].nom << "  de  " << tab[i].sorte << /*" (valeur: "<< main[i].valeur_num << ")" <<*/ endl;
+			cout << "(" << i+1 << ") " << tab[i].nom << "  de  " << tab[i].sorte << " (valeur: "<< tab[i].valeur_num << ")" << endl;
 		}
 	}
 }
@@ -484,12 +484,11 @@ void evaluer_main(T_compo_paquet main[] , float &gain , float mise)
 		break;
 		case 8 : gain = mise * 3;
 		break;
-		//default : cout << endl << "Vous ne gagnez rien !" << endl;
 	}
 	
 }
 
-void evaluer_joker(/*T_compo_paquet cartes[] ,*/ T_compo_paquet main[] , float &gain , float mise , int nb_joker)
+void evaluer_joker(T_compo_paquet main[] , float &gain , float mise , int nb_joker)
 {
 	T_compo_paquet tabJoker[54];	//jeu de cartes de test
 	T_compo_paquet temp_main[5];		//main originale
@@ -499,17 +498,7 @@ void evaluer_joker(/*T_compo_paquet cartes[] ,*/ T_compo_paquet main[] , float &
 	int temp_gain = 0 ;
 	
 	creation_tas(tabJoker);		//jeu de cartes de test
-	
-	for (int i=0 ; i < 5 ; i++)	//vérifie le nombre de joker dans la main et change j
-	{
-		if (main[i].valeur_num == 15)
-		{
-			nb_joker++;
-		}
-	}
-	
-	cout << endl << "JK : " << nb_joker << endl ;
-	
+		
 	for (int i=0 ; i < 5 ; i++)	//variable temp_main est la variable temp que l'on peut modifier
 	{
 		temp_main[i] = main[i];
@@ -528,11 +517,9 @@ void evaluer_joker(/*T_compo_paquet cartes[] ,*/ T_compo_paquet main[] , float &
 							{
 								temp_main[j].valeur_num	= tabJoker[i].valeur_num;
 								temp_main[j].sorte		= tabJoker[i].sorte;
-								//cout << endl << "Joker : " << temp_main[j].valeur << ", " << temp_main[j].valeur_num << " de " << temp_main[j].sorte << endl ;
 							}
 						}
 						evaluer_main(temp_main,gain,mise);
-						//cout << endl << "Gain evalues : " << gain << "	Gains enregistres : " << temp_gain << endl;
 						if (gain > temp_gain)
 						{
 							for (int j=0 ; j < 5 ; j++)
@@ -549,11 +536,13 @@ void evaluer_joker(/*T_compo_paquet cartes[] ,*/ T_compo_paquet main[] , float &
 					gain = temp_gain;
 					if (gain != 0)
 					{
-						cout << endl << endl << "Main apres calcul de la meilleure place :" << endl ;
+						cout << endl << endl << "Main apres calcul de la meilleure place :" << endl << endl
+						 ;
 						display(temp_joker,5);
 					}
 					else
 					{
+						cout << endl << endl << "Meilleur placement impossible. Votre main :" << endl << endl ;
 						trier_main(main);	//dans le cas où elle ne serait pas triée (quand on utilise triche par example)
 						display(main,5);
 					}
@@ -576,8 +565,6 @@ void evaluer_joker(/*T_compo_paquet cartes[] ,*/ T_compo_paquet main[] , float &
 											temp_main[jk1].sorte		= tabJoker[i].sorte;
 											temp_main[jk2].valeur_num	= tabJoker[j].valeur_num;
 											temp_main[jk2].sorte		= tabJoker[j].sorte;
-										//	cout << endl << "Joker1 : " << temp_main[jk1].valeur << ", " << temp_main[jk1].valeur_num << " de " << temp_main[jk1].sorte << endl ;
-										//	cout << endl << "Joker2 : " << temp_main[jk2].valeur << ", " << temp_main[jk2].valeur_num << " de " << temp_main[jk2].sorte << endl ;										
 										}
 									}
 								}
@@ -601,17 +588,18 @@ void evaluer_joker(/*T_compo_paquet cartes[] ,*/ T_compo_paquet main[] , float &
 					gain = temp_gain ;
 					if (temp_gain != 0)
 					{
-						cout << endl << endl << "Main apres calcul de la meilleure place :" << endl ;
+						cout << endl << endl << "Main apres calcul de la meilleure place :" << endl << endl ;
 						display(temp_joker,5);
 					}
 					else
 					{
+						cout << endl << endl << "Meilleur placement impossible. Votre main :" << endl << endl ;
 						trier_main(main);	//dans le cas où elle ne serait pas triée (quand on utilise triche par example)
 						display(main,5);
 					}
 		break;
 	}
-	cout << endl << endl << "Gain final : " << gain << " $." << endl ;
+	cout << endl << endl << "Gain : " << gain << " $." << endl ;
 }
 
 bool rejouer(bool &play)		//Affiche/demande au joueur s'il veut rejouer
@@ -633,105 +621,123 @@ bool rejouer(bool &play)		//Affiche/demande au joueur s'il veut rejouer
 	}
 }
 
-void information(bool &info)
+void information(bool &info, bool &jouer)
 {
 	system("cls");
 	char rep;
 	
 	cout << "Informations compl" << char(130) << "mentaires :" << endl;
 	cout << "Le mode 'Jouer' permet de demarrer le jeu normalement. Les cartes seront brassees, distribuée et pourront être échangée." << endl;
-	cout << "Le mode 'Tricher' permet de lancer le jeu en mode de triche, dans lequel vous pouvez choisir vos cartes selon leur indice dans le paquet";
+	cout << "Le mode 'Tricher' permet de lancer le jeu en mode de triche, dans lequel vous pouvez choisir vos cartes selon leur indice dans le paquet" << endl;
+	cout << "Le mode 'Tester' fonctionne comme 'Jouer', a ceci pres qu'il parametre la mise a 1, et ne demande pas le changement de cartes. Il affiche votre main, vos gains avec la main presente, pause le ";
+	cout << "systeme, puis, en appuyant sur une touche, vous recommencez le meme processus. C'est un outil de test rapide.";
 	cout << "A noter toutefois qu'il n'est pas possible d'echanger les cartes dans ce mode, vos cartes seront donc juste triees" << endl << endl;
 	cout << "N.B : Vous ne pouvez changer de mode de jeu uniquement au menu du jeu. Celui-ci ne s'affichera qu'a l'ouverture du programme." << endl;
-	cout << "Ainsi, nous vous invitons a relancer le programme pour changer de mode. Notez aussi qu'en mode triche, la mise est demandee et les gains sont calcules.";
-	cout << endl << endl << endl << "1 - Retour au menu" << endl << "Indiquez ce que vous voulez faire : ";
-	cin >> rep ;
-	while (rep != '1')
-	{
-		cout << endl << "Saisie invalide." << endl << "Indiquez ce que vous voulez faire : ";
-		cin >> rep ;
-	}
-	info = false;
+	cout << "Ainsi, nous vous invitons a relancer le programme pour changer de mode. Notez aussi qu'en mode triche, la mise est demandee et les gains sont calcules." << endl << endl;
+	
+	system("Pause");
 	
 }
 
-void demarrer(bool &jouer, bool &triche, bool &info)		//premiere fonction appellée. Elle affiche le menu de démarrage, et demande au joueur de choisir entre jouer et arrêter le processus
+void demarrer(bool &jouer, bool &triche, bool &info, bool &test)		//premiere fonction appellée. Elle affiche le menu de démarrage, et demande au joueur de choisir entre jouer et arrêter le processus
 {
-	system("cls");
-	
 	int rep ;
-	cout << setfill('=') << setw(25) << ' ' << "Nom de code: Poker Machine " << setw(25) << '=' << setfill(' ') << endl ;
-	cout << endl << endl << endl ;
-	cout << "Que voulez vous faire ?" << endl ;
-	cout << "1 - Jouer " << char(133) << " Ndc: Poker Machine." << endl ;
-	cout << "2 - Tricher" << endl ;
-	cout << "3 - Informations" << endl ;
-	cout << "4 - Quitter" << endl ;
-	cout << "Entrez votre choix : " ; cin >> rep ;
-	while ((rep < 1) || (rep > 4))
-	{
-		cout << endl << "Saisie invalide. \nEntrez votre choix : " ; cin >> rep ;
-	}
 	
-	switch (rep)
+	do
 	{
-		case 1 : jouer	= true 	; 	info 	= false ;
-		break;
-		case 2 : jouer 	= true 	; 	triche 	= true 	; info = false ;
-		break;
-		case 3 : info  	= true 	;	information(info);
-		break;
-		case 4 : jouer 	= false ; 	info 	= false ;
-		break;
-	}
+		system("cls");
+			
+		cout << setfill('=') << setw(25) << ' ' << "Nom de code: Poker Machine " << setw(25) << '=' << setfill(' ') << endl ;
+		cout << endl << endl << endl ;
+		cout << "Que voulez vous faire ?" << endl ;
+		cout << "1 - Jouer " << char(133) << " Ndc: Poker Machine." << endl ;
+		cout << "2 - Tricher" << endl ;
+		cout << "3 - Informations" << endl ;
+		cout << "4 - Tester" << endl ;
+		cout << "5 - Quitter" << endl ;
+		cout << "Entrez votre choix : " ; cin >> rep ;
+		
+			
+		while ((rep < 1) || (rep > 5))
+		{
+			cout << endl << "Saisie invalide. \nEntrez votre choix : " ; cin >> rep ;
+		}
+		
+		switch (rep)
+		{
+			case 1 : jouer	= true 	; 	info 	= false ;
+			break;
+			case 2 : jouer 	= true 	; 	triche 	= true 	; info = false ;
+			break;
+			case 3 : info  	= true 	;	information(info, jouer);
+			break;
+			case 4 : jouer 	= true	;	test	= true	; info 	= false ;
+			break;
+			case 5 : jouer 	= false ; 	info 	= false ;
+			break;
+		}
+	}while((jouer==false)&&(rep!=5));
 }
 
 
 int main ()
 {	
 	T_compo_paquet cartes[54] ;
-	T_compo_paquet main[5] ;
-	float mise 		= 0 ;
-	float gain 		= 0 ;
-	int nb_joker 	= 0 ;
+	T_compo_paquet main[5]	;
+	int partie		= 0		;
 	bool playagain 	= false ;
 	bool jouer 		= false ;
 	bool triche 	= false ;
-	bool info;
+	bool test		= false ;
+	bool info ;
 	
 	do
 	{
-		demarrer(jouer, triche, info) ;
+		demarrer(jouer, triche, info, test) ;
 	}while(info);
 	
 	while ((playagain) || (jouer))
 	{
+		float mise 		= 0 ;
+		float gain 		= 0 ;
+		int nb_joker 	= 0 ;
+		
 		system("cls") ;
 		
 		playagain = false ;
 		jouer = false ;
-		int nb_joker = 0 ;
-		
 		creation_tas(cartes) ;
-		//demander_mise(mise);
-		mise = 1 ;
-		if (triche)
+		
+		if (test==false)
 		{
-			choisir_main(cartes,main, nb_joker);
-			evaluer_joker(main,gain,mise,nb_joker);
+			demander_mise(mise);
+			if (triche)
+			{
+				choisir_main(cartes,main, nb_joker);
+				evaluer_joker(main,gain,mise,nb_joker);
+			}
+			else
+			{
+				brasser(cartes);
+				donne_main(cartes,main,nb_joker) ;
+				evaluer_joker(main,gain,mise,nb_joker);
+				garde_main(cartes,main) ;
+				evaluer_joker(main,gain,mise,nb_joker);
+			}
 		}
 		else
 		{
-			brasser(cartes);
+			mise = 1 ;
+			brasser(cartes) ;
 			donne_main(cartes,main,nb_joker) ;
 			evaluer_joker(main,gain,mise,nb_joker);
-			garde_main(cartes,main) ;
-			evaluer_joker(main,gain,mise,nb_joker);
+			cout << endl << "Test n_" << partie+1 << endl << endl;
 		}
-		
+		partie++;
 		rejouer(playagain) ;
 	}
 	system("cls") ;
+	cout << "Nombre de partie(s) jou" << char(130) << "e(s) : " << partie << '.' << endl;
 	cout << "Ce modeste jeu " << char(133) << ' ' << char(130) << 't' << char(130) << " d" << char(130) << "velopp" << char(130) << " par :" << endl;
 	cout << "Aleck Parent" << endl << "Maxime Damour";
 	cout << endl << endl << setfill('-') << setw(70) << '-' << setfill(' ') << endl << endl ;
